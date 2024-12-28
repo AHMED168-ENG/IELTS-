@@ -1,0 +1,135 @@
+<style>
+  .navbar {
+    background-color: #117a8b;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.15);
+  }
+  .navbar .collapse ul li a {
+    color: white;
+    padding: 5px !important;
+    position: relative;
+    transition: 0.3s;
+    font-size: 14px;
+  }
+  .navbar .collapse ul li a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 1.6px;
+    background-color: #495057;
+    width: 0;
+    transition: 0.3s;
+  }
+  .navbar .collapse ul li a:hover::after,
+  .navbar .collapse ul li a.active::after {
+    width: 100%;
+  }
+  .navbar .collapse ul li a:hover,
+  .navbar .collapse ul li a.active {
+    color: #495057 !important;
+  }
+
+  .navbar .collapse ul li {
+    padding: 0px 10px;
+  }
+  .navbar .collapse .btn-parent a:first-of-type,
+  .navbar .collapse .btn-parent a:last-of-type:hover {
+    background-color: #495057;
+    border: 1px solid transparent;
+    color: white !important;
+  }
+  .navbar .collapse .btn-parent a:first-of-type:hover {
+    font-weight: 600;
+  }
+  .navbar .collapse .btn-parent a:last-of-type,
+  .navbar .collapse .btn-parent a:first-of-type:hover {
+    border-color: #495057;
+    color: #495057 !important;
+    background-color: transparent;
+  }
+  .navbar .collapse .btn-parent a:last-of-type:hover {
+    border-color: #495057;
+    color: #495057;
+  }
+</style>
+
+<!-- start of nav -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container" style="min-width: 100% !important;">
+    <a class="navbar-brand" href="/home"
+      ><img
+        style="width: 60px; height: 60px !important"
+        src="/frontEnd/assets/images/logo.jpeg"
+        alt="logo"
+    /></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link <%= URL == "/home" ? "active" : "" %>" href="/home" >الرئيسيه</a>
+        </li>
+        <li class="nav-item <%= user ? "" : "d-none" %>">
+          <a class="nav-link <%= URL == "/userProfile" ? "active" : "" %>" href="/userProfile">الصفحه الشخصيه</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= URL == "/ourService" ? "active" : "" %>" href="/ourService">خدماتنا</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link <%= URL == "/Alltraining" ? "active" : "" %>" href="/Alltraining">جميع الخدمات </a>
+        </li> -->
+        <li class="nav-item <%= user ? "" : "d-none" %>">
+          <a class="nav-link <%= URL == "/yourTraining" ? "active" : "" %>" href="/yourTraining">التدريبات الخاصه بك</a>
+        </li>
+
+        <li class="nav-item <%= user ? "" : "d-none" %>">
+          <a class="nav-link <%= URL == "/yourBooks" ? "active" : "" %>" href="/yourBooks">تدريبات اعضاء النطق</a>
+        </li>
+        <li class="nav-item <%= user ? "" : "d-none" %>">
+          <a class="nav-link <%= URL == "/yourGide" ? "active" : "" %>" href="/yourGide">ارشاداتك</a>
+        </li>
+        <li class="nav-item <%= user ? "" : "d-none" %>">
+          <a class="nav-link <%= URL == "/ExamVoice" ? "active" : "" %>" href="/ExamVoice">البرامج التأهيليه</a>
+        </li>
+        <li class="nav-item <%= user ? "" : "d-none" %>">
+          <a class="nav-link <%= URL == "/allTesting" ? "active" : "" %>" href="/allTesting">الاختبارات</a>
+        </li>
+        <li class="nav-item <%= user ? "" : "d-none" %>">
+          <a class="nav-link <%= URL == "/resultPage" ? "active" : "" %>" href="/resultPage">النتائج</a>
+        </li>
+        <li class="nav-item <%= user ? "" : "d-none" %>">
+          <a class="nav-link" href="/contactUs  <%= URL == "/contactUs" ? "active" : "" %>">تواصل معنا</a>
+        </li>
+        <li class="nav-item <%= user && user.isAdmin ? "" : "d-none" %>">
+          <a class="nav-link" href="dashboard  <%= URL == "dashboard" ? "active" : "" %>">الادمن</a>
+        </li>
+      </ul>
+      <% if (!user) { %>
+      <div class="btn-parent">
+        <a href="/signIn" class="btn-1 btn my-2 my-sm-0" type="submit"
+          >انضم الينا</a
+        >
+        <a href="/signUp" class="btn-2 btn my-2 my-sm-0" type="submit">تسجيل</a>
+      </div>
+      <% } else { %>
+      <div class="btn-parent">
+        <a href="/signOutUser" class="btn-1 btn my-2 my-sm-0" type="submit"
+          >تسجيل خروج</a
+        >
+        <a></a>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</nav>
+<!-- end of nav -->

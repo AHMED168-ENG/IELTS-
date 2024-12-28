@@ -1,0 +1,115 @@
+<%- include("../include/head.ejs") %> <%- include("../include/navebar.ejs") %>
+<%- include("../include/notification.ejs") %>
+
+<style>
+  .training header {
+    text-align: center;
+  }
+  .training h1 {
+    font-size: 29px;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding-bottom: 10px;
+  }
+  .training h1::after {
+    content: "";
+    width: 40%;
+    bottom: 0;
+    position: absolute;
+    height: 2px;
+    background: #1610BB;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .training .row > div .box {
+    border: 1px solid #ccc;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+  }
+
+   .paginate {
+     margin-top:40px
+   }
+  .paginate ul {
+    justify-content: center;
+    align-items: center;
+  }
+  .paginate ul li a {
+    margin:0 4px;
+    width:35px;
+    height:35px;
+    display: flex;
+    background:#ccc;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    color:#0056B3
+  }
+  .paginate ul li a.active {
+    background:#0056B3;
+  }
+  .paginate ul li a.active {
+    color:white
+  }
+
+</style>
+<div class="training">
+  <div class="container">
+    <header>
+      <h1 class="text-center">البرامج التأهيليه لمشكلة طفلك</h1>
+    </header>
+    <div class="row">
+      <% if (ExamVoice.rows.length > 0) { %>
+        <% ExamVoice.rows.forEach(element => { %>
+              <div class="col-sm-12 col-md-6 col-lg-3">
+                <div class="box">
+                  <div class="image">
+                    <h5 style="padding:7px"><%= element.title %></h5>
+                    <img style="height:130px" src="/backEnd/assets/img/sound/<%=
+                    element.image.split("--")[0] %>" alt="" />
+                  </div>
+                  <div class="text">
+                    <p>الاضطراب : <span <%=  element.isOther ? "style=color:red" : "" %>><%= element.isOther ? " هذا الكتاب مشترك مبين اكثر من اعاقه " :  element.soundDisability.name %></span></p>                  
+                     <button class=" download btn btn-sm btn-success" dataHref="http://localhost:5000/backEnd/assets/img/sound/<%= element.pdf.split("--")[0] %>">تنزيل الملف</button>
+                  </div>
+                </div>
+              </div>
+              <% }) %>
+            <% } else { %>
+              <div class="alert col-12 alert-danger">
+                لا يوجد اي ارشادات
+              </div>
+            <% } %>
+     
+    </div>
+    <div class="paginate">
+        <ul class="list-unstyled d-flex">
+            <% pages.forEach(element => { %>
+                <li><a class="<%= page == element.number ? "active" : "" %>" href="<%= element.url %>"><%= element.number %></a></li>
+            <% }) %>
+        </ul>
+    </div>
+  </div>
+</div>
+
+<%- include("../include/footer.ejs") %> <%-
+include("../include/footerScript.ejs") %>
+<script src="/frontEnd/assets/js/main.js"></script>
+<script>
+  var allButtons = document.querySelectorAll("button.download")
+  allButtons.forEach(ele => {
+    ele.onclick = function(e) {
+    download(e.target.getAttribute("dataHref"))
+  }
+  })
+
+  function download(pdf) {
+    var element = document.createElement("a")
+    element.setAttribute("href" , pdf)
+    element.setAttribute("download" , pdf.substring(pdf.lastIndexOf('/')+1))
+    element.style.display = "none"
+    document.body.appendChild(element)
+    element.click()
+    document.body.removeChild(element)
+  }
+</script>

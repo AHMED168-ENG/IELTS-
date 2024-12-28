@@ -1,0 +1,145 @@
+<%- include("../include/head")  %> 
+<link rel="stylesheet" href="/frontEnd/assets/css/style.css">
+    <link
+      rel="stylesheet"
+      href="/frontEnd/assets/plugins/select2/css/select2.min.css"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="/frontEnd/assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="/frontEnd/assets/plugins/dropzone/dropzone.min.css"
+    />
+	    <link href="/backEnd/assets/Tagging-System-Autocomplete-Amsify-Suggestags/css/amsify.suggestags.css" rel="stylesheet">
+    <!-- Main CSS -->
+	<style>
+		body {
+			background-color: #f8f9fa;
+		}
+		.change-photo-btn {
+			background: #19C1DC;
+			width:200px;
+			border-radius: 25px;
+			height:40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+		}
+		.change-photo-btn input {
+			position: absolute;
+			top:50%;
+			left:50%;
+			transform: translate(-50% , -50%);
+			width:100%;
+			height:100%;
+			opacity: 0;
+		}
+	</style>
+<%- include("../include/aside")  %> 
+<%- include("../include/navePare")  %> 
+<%- include("../include/alert")  %> 
+</head>
+    </body>
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Page Wrapper -->
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+                    <!-- Page Header -->
+                    <div class="page-header">
+                        <div class="row">
+                            <div class="col-sm-7 col-auto">
+                                <h3 class="page-title">الاختبارات </h3>
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">لوحه التحكم</a></li>
+                                    <li class="breadcrumb-item active">تعديل اختبار </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <%- include("../include/notification")  %> 
+                    </div>
+                    <!-- /Page Header -->
+                    <div class="row">
+			            <div class="col-md-12">
+							<form method="post">
+								<!-- Basic Information -->
+								<div class="card">
+									<div class="card-body">
+										<h4 class="card-title">معلومات بسيطه</h4>
+										<div class="row form-row">
+											
+											  <div class="col-md-12">
+													<div class="form-group">
+														<label>ادخل الجمل المراد نطقها</label>
+														<input type="text" value="<%= Testing.exam %>" name="exam" id="tags" class="form-control">
+														<% if (validationError) { %>
+															<% if (validationError.exam) { %>
+																<span class="text-danger"><%=validationError.exam[0].msg %></span>
+															<% } %>
+														<% } %>
+													</div>
+												</div>
+
+											<div class="col-md-12">
+												<div class="form-group">
+													<label>ئ <span class="text-danger">*</span></label>
+													<select class="form-control" name="disability" id="">
+														<% disability.forEach(element => { %>
+															<option value="<%= element.id %>" <%= element.id == Testing.disability ? "selected" : "" %>><%= element.name %></option>
+														<% }) %>
+													</select>
+													<% if (validationError) { %>
+														<% if (validationError.disability) { %>
+															<span class="text-danger"><%=validationError.disability[0].msg %></span>
+														<% } %>
+													<% } %>  
+												</div>
+											</div>
+
+											
+											<div class="col-md-12">
+												<div class="form-group">
+													<label for="active">التفعيل <span class="text-danger">*</span></label>
+													<input id="active" value="1" name="active" <%= Testing.active ? "checked" : ""  %> type="checkbox" class="form-control">
+													
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Basic Information -->
+							
+								<div class="submit-section submit-btn-bottom">
+									<button style="margin-bottom:30px" type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+								</div>
+							</form>
+						</div>
+                    </div>
+                </div>			
+            </div>
+            <!-- /Page Wrapper -->
+
+
+        <%- include("../include/footer_script")  %> 
+        		
+        <script src="/backEnd/assets/Tagging-System-Autocomplete-Amsify-Suggestags/js/jquery.amsify.suggestags.js"></script>
+		<script>
+			$('input[id="tags"]').amsifySuggestags({
+
+		type : 'amsify',
+		suggestions: ['Black', 'White', 'Red', 'Blue', 'Green', 'Orange']
+
+		});
+		</script>
+		<script src="/backEnd/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+		<script src="/backEnd/assets/plugins/datatables/datatables.min.js"></script>
+		<script src="/backEnd/assets/js/script.js"></script>
+
+    </head>
+</body>
