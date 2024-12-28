@@ -493,10 +493,14 @@
 							}
 						}
 
-						try {
-							Object.keys(payload.questions).forEach(sectionId => {
-								payload.questions[sectionId] = payload.questions[sectionId].filter(question => question !== null);
-							});
+						try { 
+			
+							if (payload && payload.questions && Object.keys(payload.questions).length) {
+								Object.keys(payload.questions).forEach(sectionId => {
+									payload.questions[sectionId] = payload.questions[sectionId].filter(question => question !== null);
+								});
+							}
+							
 							const response = await fetch('http://localhost:5000/dashboard/addTesting', {
 								method: 'POST',
 								headers: {
