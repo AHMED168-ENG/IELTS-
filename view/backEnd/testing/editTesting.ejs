@@ -1,145 +1,770 @@
-<%- include("../include/head")  %> 
-<link rel="stylesheet" href="/frontEnd/assets/css/style.css">
-    <link
-      rel="stylesheet"
-      href="/frontEnd/assets/plugins/select2/css/select2.min.css"
-    />
+<%- include("../include/head") %>
+	<link rel="stylesheet" href="/frontEnd/assets/css/style.css">
+	<link rel="stylesheet" href="/frontEnd/assets/plugins/select2/css/select2.min.css" />
 
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="/frontEnd/assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css"
-    />
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="/frontEnd/assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" />
 
-    <link
-      rel="stylesheet"
-      href="/frontEnd/assets/plugins/dropzone/dropzone.min.css"
-    />
-	    <link href="/backEnd/assets/Tagging-System-Autocomplete-Amsify-Suggestags/css/amsify.suggestags.css" rel="stylesheet">
-    <!-- Main CSS -->
+	<link rel="stylesheet" href="/frontEnd/assets/plugins/dropzone/dropzone.min.css" />
+	<link href="/backEnd/assets/Tagging-System-Autocomplete-Amsify-Suggestags/css/amsify.suggestags.css"
+		rel="stylesheet">
+	<!-- Main CSS -->
 	<style>
 		body {
 			background-color: #f8f9fa;
 		}
+
+		.audio-controls {
+			display: flex;
+			align-items: center;
+			justify-content: right;
+			column-gap: 5px;
+			background-color: #999;
+			padding: 5px;
+		}
+
 		.change-photo-btn {
 			background: #19C1DC;
-			width:200px;
+			width: 200px;
 			border-radius: 25px;
-			height:40px;
+			height: 40px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			position: relative;
 		}
+
 		.change-photo-btn input {
 			position: absolute;
-			top:50%;
-			left:50%;
-			transform: translate(-50% , -50%);
-			width:100%;
-			height:100%;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 100%;
+			height: 100%;
 			opacity: 0;
 		}
+
+		.form-group {
+			padding: 10px;
+			margin: 10px 0;
+			background-color: #eee;
+		}
+
+		audio {
+			height: 42px;
+		}
+
+		.card-title,
+		.nav-link {
+			text-transform: capitalize;
+		}
+
+		.choice-number {
+			padding: 7px;
+			background-color: #666;
+			color: white;
+			margin-left: 10px;
+		}
+
+		.remove-choice-btn {
+			margin: 0 !important;
+			margin-right: 10px !important;
+			height: 100%;
+		}
+
+		.add-choice-btn {
+			width: 100%;
+		}
 	</style>
-<%- include("../include/aside")  %> 
-<%- include("../include/navePare")  %> 
-<%- include("../include/alert")  %> 
-</head>
-    </body>
-        <!-- Main Wrapper -->
-        <div class="main-wrapper">
-            <!-- Page Wrapper -->
-            <div class="page-wrapper">
-                <div class="content container-fluid">
-                    <!-- Page Header -->
-                    <div class="page-header">
-                        <div class="row">
-                            <div class="col-sm-7 col-auto">
-                                <h3 class="page-title">الاختبارات </h3>
-                                <ul class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html">لوحه التحكم</a></li>
-                                    <li class="breadcrumb-item active">تعديل اختبار </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <%- include("../include/notification")  %> 
-                    </div>
-                    <!-- /Page Header -->
-                    <div class="row">
-			            <div class="col-md-12">
-							<form method="post">
-								<!-- Basic Information -->
-								<div class="card">
-									<div class="card-body">
-										<h4 class="card-title">معلومات بسيطه</h4>
-										<div class="row form-row">
-											
-											  <div class="col-md-12">
-													<div class="form-group">
-														<label>ادخل الجمل المراد نطقها</label>
-														<input type="text" value="<%= Testing.exam %>" name="exam" id="tags" class="form-control">
-														<% if (validationError) { %>
-															<% if (validationError.exam) { %>
-																<span class="text-danger"><%=validationError.exam[0].msg %></span>
-															<% } %>
-														<% } %>
+	<%- include("../include/aside") %>
+		<%- include("../include/navePare") %>
+			<%- include("../include/alert") %>
+				</head>
+				</body>
+
+				<div class="main-wrapper">
+					<!-- Page Wrapper -->
+					<div class="page-wrapper">
+						<div class="content container-fluid">
+							<!-- Page Header -->
+							<div class="page-header">
+								<div class="row">
+									<div class="col-sm-7 col-auto">
+										<h3 class="page-title">الاختبارات</h3>
+										<ul class="breadcrumb">
+											<li class="breadcrumb-item"><a href="index.html">لوحة التحكم</a></li>
+											<li class="breadcrumb-item active">إضافة اختبار</li>
+										</ul>
+									</div>
+								</div>
+								<%- include("../include/notification") %>
+							</div>
+							<!-- /Page Header -->
+
+							<div class="row">
+								<div class="col-md-12">
+									<form method="post" enctype="application/x-www-form-urlencoded" id="examForm">
+										<!-- Tabs Section -->
+										<ul class="nav nav-tabs">
+											<li class="nav-item">
+												<a class="nav-link active" data-toggle="tab"
+													href="#exam-info-tab">بيانات الامتحان</a>
+											</li>
+											<li class="nav-item">
+												<a class="nav-link" data-toggle="tab" href="#questions-tab">الأسئلة</a>
+											</li>
+										</ul>
+
+										<div class="tab-content">
+											<!-- Exam Info Tab -->
+											<div id="exam-info-tab" class="tab-pane active">
+												<div class="card mt-3">
+													<div class="card mt-3">
+														<div class="card-body">
+															<h4 class="card-title">معلومات أساسية</h4>
+															<div class="row form-row">
+																<div class="col-md-12">
+																	<div class="form-group">
+																		<label>اسم الامتحان <span
+																				class="text-danger">*</span></label>
+																		<input type="text" name="examName" id="examName"
+																			class="form-control" required>
+																		<div class="error-message text-danger"></div>
+																	</div>
+																</div>
+
+																<div class="col-md-12">
+																	<div class="form-group">
+																		<label>نوع الامتحان <span
+																				class="text-danger">*</span></label>
+																		<select class="form-control" name="examType"
+																			id="examType" required>
+																			<option value="academic">Academic</option>
+																			<option value="general training">General
+																				Training</option>
+																		</select>
+																		<div class="error-message text-danger"></div>
+																	</div>
+																</div>
+
+																<!-- Toggle Shuffle Button -->
+																<div class="col-md-12">
+																	<div class="form-group">
+																		<label>ترتيب عشوائي</label>
+																		<div>
+																			<button type="button" id="shuffleToggle"
+																				class="btn ">
+																				<span id="shuffleLabel"></span>
+																			</button>
+																			<input type="hidden" name="shuffle"
+																				id="shuffleInput" value="true">
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
 													</div>
 												</div>
 
-											<div class="col-md-12">
-												<div class="form-group">
-													<label>ئ <span class="text-danger">*</span></label>
-													<select class="form-control" name="disability" id="">
-														<% disability.forEach(element => { %>
-															<option value="<%= element.id %>" <%= element.id == Testing.disability ? "selected" : "" %>><%= element.name %></option>
-														<% }) %>
-													</select>
-													<% if (validationError) { %>
-														<% if (validationError.disability) { %>
-															<span class="text-danger"><%=validationError.disability[0].msg %></span>
-														<% } %>
-													<% } %>  
-												</div>
 											</div>
+											<!-- /Exam Info Tab -->
 
-											
-											<div class="col-md-12">
-												<div class="form-group">
-													<label for="active">التفعيل <span class="text-danger">*</span></label>
-													<input id="active" value="1" name="active" <%= Testing.active ? "checked" : ""  %> type="checkbox" class="form-control">
-													
+											<!-- Questions Tab -->
+											<div id="questions-tab" class="tab-pane">
+												<ul class="nav nav-tabs" id="sections-tabs">
+													<!-- Dynamic Section Tabs Will Be Appended Here -->
+												</ul>
+
+												<div class="tab-content" id="sections-content">
+													<!-- Dynamic Section Content Will Be Appended Here -->
 												</div>
 											</div>
 										</div>
-									</div>
+
+										<div class="submit-section submit-btn-bottom">
+											<button type="button" id="submitExam" class="btn btn-primary submit-btn">حفظ
+												التغييرات</button>
+										</div>
+									</form>
 								</div>
-								<!-- /Basic Information -->
-							
-								<div class="submit-section submit-btn-bottom">
-									<button style="margin-bottom:30px" type="submit" class="btn btn-primary submit-btn">Save Changes</button>
-								</div>
-							</form>
+							</div>
 						</div>
-                    </div>
-                </div>			
-            </div>
-            <!-- /Page Wrapper -->
+					</div>
+					<!-- /Page Wrapper -->
+				</div>
+				<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+				<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+				<script>
+					document.addEventListener("DOMContentLoaded", () => {
+						const shuffleToggle = document.getElementById("shuffleToggle");
+						const shuffleLabel = document.getElementById("shuffleLabel");
+						const shuffleInput = document.getElementById("shuffleInput");
+
+						// Initial state
+						let isShuffleEnabled = true;
+
+						shuffleToggle.addEventListener("click", () => {
+							isShuffleEnabled = !isShuffleEnabled;
+							shuffleInput.value = isShuffleEnabled ? "true" : "false";
+							shuffleLabel.textContent = !isShuffleEnabled ? "معطل" : "مفعل";
+							shuffleToggle.classList.toggle("btn-primary", isShuffleEnabled);
+							shuffleToggle.classList.toggle("btn-danger", !isShuffleEnabled);
+						});
+					});
+				</script>
+				<script>
+
+					const sections = JSON.parse('<%- JSON.stringify(sections) %>');
+					const examData = JSON.parse('<%- JSON.stringify(Testing) %>'); // بيانات الامتحان والأسئلة بالكامل
+					const sectionsTabs = document.getElementById('sections-tabs');
+					const sectionsContent = document.getElementById('sections-content');
+					const editors = {}; // لتخزين CKEditor الخاص بكل سؤال
+					const audioFiles = {}; // لتخزين الملفات الصوتية
+					const fileUploads = {}; // لتخزين الملفات المرفوعة
+					let questionCounts = {};
+
+					function showNotification({ type, title, text = '', html = '', timer = 5000, position = 'top-end' }) {
+						Swal.fire({
+							toast: true,
+							position,
+							icon: type,
+							title,
+							text,
+							html,
+							showConfirmButton: false,
+							timer,
+						});
+					}
+
+					const populateExamInfo = () => {
+						document.getElementById('examName').value = examData.name;
+						document.getElementById('examType').value = examData.type;
+						const shuffleInput = document.getElementById('shuffleInput');
+						const shuffleToggle = document.getElementById("shuffleToggle");
+						const shuffleLabel = document.getElementById("shuffleLabel");
+
+						if (shuffleInput) {
+							isShuffleEnabled = examData.shuffle;
+							shuffleInput.value = isShuffleEnabled ? "true" : "false";
+							shuffleLabel.textContent = !isShuffleEnabled ? "معطل" : "مفعل";
+							shuffleToggle.classList.toggle("btn-primary", isShuffleEnabled);
+							shuffleToggle.classList.toggle("btn-danger", !isShuffleEnabled);
+						}
+					};
+
+					const attachEventListeners = () => {
+						document.querySelectorAll('.question-type').forEach(select => {
+							select.addEventListener('change', (e) => {
+								const type = e.target.value;
+								const sectionId = e.target.dataset.sectionId;
+								const index = e.target.dataset.index;
+								const additionalFields = document.querySelector(`.additional-fields[data-section-id="${sectionId}"][data-index="${index}"]`);
+								additionalFields.innerHTML = '';
+
+								if (type === 'multipleChoice') {
+									additionalFields.innerHTML = `
+										<div class="form-group">
+											<label>الخيارات <span class="text-danger">*</span></label>
+											<div id="choices-container-${sectionId}-${index}">
+												<div class="choice-wrapper d-flex align-items-center mb-2">
+													<span class="choice-number mr-2">1.</span>
+													<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" placeholder="الخيار الأول" required>
+												</div>
+												<div class="choice-wrapper d-flex align-items-center mb-2">
+													<span class="choice-number mr-2">2.</span>
+													<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" placeholder="الخيار الثاني" required>
+												</div>
+											</div>
+											<button type="button" class="btn btn-success btn-sm add-choice-btn" data-section-id="${sectionId}" data-index="${index}">إضافة خيار</button>
+										</div>
+										<div class="form-group">
+											<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
+											<select name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required></select>
+										</div>
+									`;
+									attachEventListeners();
+								} else if (type === 'trueFalse') {
+									additionalFields.innerHTML = `
+										<div class="form-group">
+											<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
+											<select name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required>
+												<option value="true">صح</option>
+												<option value="false">خطأ</option>
+											</select>
+										</div>
+									`;
+								} else if (type === 'fillInTheBlank') {
+									additionalFields.innerHTML = `
+										<div class="form-group">
+											<label>الإجابة <span class="text-danger">*</span></label>
+											<input type="text" name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required>
+										</div>
+									`;
+								} else if (type === 'audio') {
+
+									additionalFields.innerHTML = `
+										<div class="form-group">
+											<label>تسجيل صوتي <span class="text-danger">*</span></label>
+											<div class="audio-controls">
+												<button type="button" class="btn btn-primary record-audio-btn" data-section-id="${sectionId}" data-index="${index}"><i class="fa fa-microphone"></i> تسجيل</button>
+												<span class="recording-indicator text-danger d-none">جارٍ التسجيل...</span>
+												<audio controls class="mt-2 d-none"></audio>
+											</div>
+										</div>
+									`;
+									attachAudioListeners(sectionId, index);
+								} else if (type === 'file') {
+									additionalFields.innerHTML = `
+										<div class="form-group">
+											<label>رفع ملف <span class="text-danger">*</span></label>
+											<input type="file" name="questions[${sectionId}][${index}][file]" class="form-control file-upload" data-section-id="${sectionId}" data-index="${index}" required>
+										</div>
+									`;
+									attachFileListeners(sectionId, index);
+								}
+							});
+						});
+					};
+
+					const attachChoiceEvent = () => {
+
+						document.querySelectorAll('.remove-question-btn').forEach(button => {
+							button.addEventListener('click', (e) => {
+								e.target.closest('.question-block').remove();
+							});
+						});
+
+						const updateCorrectAnswerOptions = (sectionId , index) => {
+							const correctAnswerSelect = document.querySelector(`select[name="questions[${sectionId}][${index}][correctAnswer]"]`);
+							const choicesContainer = document.getElementById(`choices-container-${sectionId}-${index}`);
+							const choices = choicesContainer.querySelectorAll('input[type="text"]');
+							correctAnswerSelect.innerHTML = ''; // Clear old options
+
+							choices.forEach((choice, i) => {
+								const option = document.createElement('option');
+								option.value = choice.value;
+								option.textContent = `${i + 1}. ${choice.value}`;
+								correctAnswerSelect.appendChild(option);
+							});
+						}; 
+						document.querySelectorAll('.add-choice-btn').forEach(button => {
+							button.addEventListener('click', (e) => {
+								const sectionId = e.target.getAttribute('data-section-id');
+								const index = e.target.getAttribute('data-index');
+								const choicesContainer = document.getElementById(`choices-container-${sectionId}-${index}`);
+
+								const choiceTemplate = `
+									<div class="choice-wrapper d-flex align-items-center mb-2">
+										<span class="choice-number mr-2">${choicesContainer.children.length + 1}.</span>
+										<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" required>
+										<button type="button" class="btn btn-danger btn-sm ml-2 remove-choice-btn">X</button>
+									</div>
+								`;
+								choicesContainer.insertAdjacentHTML('beforeend', choiceTemplate);
+
+								attachEventListeners();
 
 
-        <%- include("../include/footer_script")  %> 
-        		
-        <script src="/backEnd/assets/Tagging-System-Autocomplete-Amsify-Suggestags/js/jquery.amsify.suggestags.js"></script>
-		<script>
-			$('input[id="tags"]').amsifySuggestags({
+								choicesContainer.addEventListener('input', (e) => {
+									if (e.target.tagName === 'INPUT') {
+										updateCorrectAnswerOptions(sectionId , index);
+									}
+								});
 
-		type : 'amsify',
-		suggestions: ['Black', 'White', 'Red', 'Blue', 'Green', 'Orange']
+								choicesContainer.addEventListener('click', (e) => {
+									if (e.target.classList.contains('remove-choice-btn')) {
+										const choiceWrapper = e.target.closest('.choice-wrapper');
+										choiceWrapper.remove();
 
-		});
-		</script>
-		<script src="/backEnd/assets/plugins/datatables/jquery.dataTables.min.js"></script>
-		<script src="/backEnd/assets/plugins/datatables/datatables.min.js"></script>
-		<script src="/backEnd/assets/js/script.js"></script>
+										// Update choice numbers
+										const allChoices = choicesContainer.querySelectorAll('.choice-wrapper');
+										allChoices.forEach((choice, i) => {
+											choice.querySelector('.choice-number').textContent = `${i + 1}.`;
+										});
 
-    </head>
-</body>
+										updateCorrectAnswerOptions(sectionId , index);
+									}
+								});
+								updateCorrectAnswerOptions(sectionId , index);
+							});
+						}, { once: true });
+					}
+
+					const populateQuestionFields = (sectionId, index, question) => {
+						const additionalFields = document.querySelector(`.additional-fields[data-section-id="${sectionId}"][data-index="${index}"]`);
+
+						if (question.type === 'multipleChoice') {
+							additionalFields.innerHTML = `
+								<div class="form-group">
+									<label>الخيارات <span class="text-danger">*</span></label>
+									<div id="choices-container-${sectionId}-${index}">
+										${question.choices.map((choice, i) => `
+											<div class="choice-wrapper d-flex align-items-center mb-2">
+												<span class="choice-number mr-2">${i + 1}.</span>
+												<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" value="${choice}" required>
+											</div>
+										`).join('')}
+									</div>
+									<button type="button" class="btn btn-success btn-sm add-choice-btn" data-section-id="${sectionId}" data-index="${index}">إضافة خيار</button>
+								</div>
+								<div class="form-group">
+									<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
+									<select name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required>
+										${question.choices.map(choice => `<option value="${choice}" ${question.correctAnswer === choice ? 'selected' : ''}>${choice}</option>`).join('')}
+									</select>
+								</div>
+							`;
+						} else if (question.type === 'trueFalse') {
+							additionalFields.innerHTML = `
+								<div class="form-group">
+									<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
+									<select name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required>
+										<option value="true" ${question.correctAnswer === 'true' ? 'selected' : ''}>صح</option>
+										<option value="false" ${question.correctAnswer === 'false' ? 'selected' : ''}>خطأ</option>
+									</select>
+								</div>
+							`;
+						} else if (question.type === 'fillInTheBlank') {
+							additionalFields.innerHTML = `
+								<div class="form-group">
+									<label>الإجابة <span class="text-danger">*</span></label>
+									<input type="text" name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" value="${question.correctAnswer}" required>
+								</div>
+							`;
+						} else if (question.type === 'audio') {
+							additionalFields.innerHTML = `
+								<div class="form-group">
+									<label>تسجيل صوتي <span class="text-danger">*</span></label>
+									<div class="audio-controls">
+										<audio controls src="http://localhost:5000/backEnd/assets/sound/question/${question.file}"></audio>
+										<input type="hidden" name="questions[${sectionId}][${index}][file]" class="form-control file-upload" value="${question.file}" required>
+										<span class="recording-indicator text-danger d-none">جارٍ التسجيل...</span>
+									</div>
+									
+								</div>
+							`;
+						} else if (question.type === 'file') {
+							additionalFields.innerHTML = `
+								<div class="form-group">
+									<label>رفع ملف <span class="text-danger">*</span></label>
+									<input type="hidden" name="questions[${sectionId}][${index}][file]" class="form-control file-upload" value="${question.file}" required>
+									<audio controls src="http://localhost:5000/backEnd/assets/sound/question/${question.file}"></audio>
+									<a href="http://localhost:5000/backEnd/assets/sound/question/${question.file}" target="_blank">عرض الملف</a>
+								</div>
+							`;
+						}
+					};
+
+					const addQuestion = (sectionId, question = null) => {
+						questionCounts[sectionId]++;
+						const questionIndex = questionCounts[sectionId];
+						const questionsContainer = document.getElementById(`questions-container-${sectionId}`);
+
+						const questionTemplate = `
+							<div class="question-block card mt-3">
+								<div class="card-body">
+									<h5>سؤال ${questionIndex}</h5>
+									<div class="form-group question-text-container">
+										<label>نص السؤال <span class="text-danger">*</span></label>
+										<textarea name="questions[${sectionId}][${questionIndex}][questionText]" id="question-editor-${sectionId}-${questionIndex}" class="form-control question-text">${question ? question.questionText : ''}</textarea>
+									</div>
+									<div class="form-group ">
+										<label>درجه السؤال <span class="text-danger">*</span></label>
+										<input min="0" name="questions[${sectionId}][${questionIndex}][degree]" value="${question ? question.degree : ''}" type="number" class="form-control question-degree"></input>
+									</div>
+									<div class="form-group">
+										<label>نوع السؤال <span class="text-danger">*</span></label>
+										<select name="questions[${sectionId}][${questionIndex}][type]" class="form-control question-type" data-section-id="${sectionId}" data-index="${questionIndex}">
+											<option value=""></option>
+											<option value="multipleChoice" ${question?.type === 'multipleChoice' ? 'selected' : ''}>اختيار من متعدد</option>
+											<option value="trueFalse" ${question?.type === 'trueFalse' ? 'selected' : ''}>صح أو خطأ</option>
+											<option value="fillInTheBlank" ${question?.type === 'fillInTheBlank' ? 'selected' : ''}>املأ الفراغ</option>
+											<option value="audio" ${question?.type === 'audio' ? 'selected' : ''}>صوت</option>
+											<option value="file" ${question?.type === 'file' ? 'selected' : ''}>ملف</option>
+										</select>
+									</div>
+									<div class="additional-fields" data-section-id="${sectionId}" data-index="${questionIndex}"></div>
+									<button type="button" class="btn btn-danger remove-question-btn">حذف السؤال</button>
+								</div>
+							</div>
+						`;
+
+						questionsContainer.insertAdjacentHTML('beforeend', questionTemplate);
+						ClassicEditor.create(document.querySelector(`#question-editor-${sectionId}-${questionIndex}`))
+							.then(editor => {
+								editors[`question-editor-${sectionId}-${questionIndex}`] = editor;
+							})
+							.catch(error => {
+								console.error(error);
+							});
+
+						if (question) {
+							populateQuestionFields(sectionId, questionIndex, question);
+						}
+
+						attachEventListeners();
+					};
+
+					document.addEventListener('click', (event) => {
+						if (event.target.classList.contains('add-question-btn')) {
+							const sectionId = event.target.getAttribute('data-section-id');
+							addQuestion(sectionId);
+						}
+					});
+
+					const createSectionsTabs = () => {
+						sections.forEach((section, index) => {
+							// إنشاء علامة تبويب للسكشن
+							const tab = document.createElement('li');
+							tab.className = 'nav-item';
+							tab.innerHTML = `
+								<a class="nav-link ${index === 0 ? 'active' : ''}" data-toggle="tab" href="#section-${section._id}">
+									${section.section || 'Unnamed Section'}
+								</a>`;
+							sectionsTabs.appendChild(tab);
+
+							// إنشاء محتوى للسكشن
+							const content = document.createElement('div');
+							content.className = `tab-pane ${index === 0 ? 'active' : ''}`;
+							content.id = `section-${section._id}`;
+							content.innerHTML = `
+								<div class="card mt-3">
+									<div class="card-body">
+										<h4 class="card-title">${section.section || 'Unnamed Section'}</h4>
+										<div id="questions-container-${section._id}" class="questions-container"></div>
+										<button type="button" class="btn btn-primary add-question-btn" data-section-id="${section._id}">
+											إضافة سؤال
+										</button>
+									</div>
+								</div>`;
+							sectionsContent.appendChild(content);
+
+							// تهيئة عداد الأسئلة
+							questionCounts[section._id] = 0;
+
+							// إضافة الأسئلة الموجودة إلى السكشن
+							const sectionQuestions = examData.questions.filter(q => q.section === section._id);
+							sectionQuestions.forEach(question => {
+								addQuestion(section._id, question);
+							});
+						});
+					};
+					createSectionsTabs();
+
+					const attachAudioListeners = (sectionId, index) => {
+						const recordBtn = document.querySelector(`.record-audio-btn[data-section-id="${sectionId}"][data-index="${index}"]`);
+						const parent = recordBtn.closest('.audio-controls');
+						const audioElement = parent.querySelector('audio');
+						const recordingIndicator = parent.querySelector('.recording-indicator');
+						let mediaRecorder;
+						let isRecording = false;
+						let chunks = [];
+						recordBtn.addEventListener('click', async () => {
+							if (!isRecording) {
+								const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+								mediaRecorder = new MediaRecorder(stream);
+
+								mediaRecorder.ondataavailable = (e) => {
+									chunks.push(e.data);
+								};
+
+								mediaRecorder.onstop = async () => {
+									const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+									audioElement.src = URL.createObjectURL(blob);
+									audioElement.classList.remove('d-none');
+									chunks = [];
+
+									const formData = new FormData();
+									formData.append('file', blob);
+
+									try {
+										const response = await fetch('http://localhost:5000/dashboard/upload-test-file', {
+											method: 'POST',
+											body: formData
+										});
+
+										if (!response.ok) {
+											throw new Error('Failed to upload file');
+										}
+
+										const data = await response.json();
+										audioFiles[`questions[${sectionId}][${index}][file]`] = data.fileName;
+										recordingIndicator.classList.add('d-none');
+										recordBtn.innerHTML = '<i class="fa fa-microphone"></i> تسجيل';
+									} catch (error) {
+										console.error('Upload failed:', error);
+									}
+
+									recordingIndicator.classList.add('d-none');
+									recordBtn.innerHTML = '<i class="fa fa-microphone"></i> تسجيل';
+								};
+
+								mediaRecorder.start();
+								isRecording = true;
+								recordingIndicator.classList.remove('d-none');
+								recordBtn.innerHTML = '<i class="fa fa-stop"></i> إيقاف';
+							} else {
+								mediaRecorder.stop();
+								isRecording = false;
+							}
+						});
+					};
+
+					const attachFileListeners = (sectionId, index) => {
+						const fileInput = document.querySelector(`.file-upload[data-section-id="${sectionId}"][data-index="${index}"]`);
+
+						fileInput.addEventListener('change', async (event) => {
+							const file = event.target.files[0];
+							const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp3'];
+
+							if (file && file.size <= 4 * 1024 * 1024 && allowedTypes.includes(file.type)) {
+								const formData = new FormData();
+								formData.append('file', file);
+
+								try {
+									const response = await fetch('http://localhost:5000/dashboard/upload-test-file', {
+										method: 'POST',
+										body: formData
+									});
+
+									if (!response.ok) {
+										throw new Error('Failed to upload file');
+									}
+
+									const data = await response.json();
+									fileUploads[`questions[${sectionId}][${index}][file]`] = data.fileName;
+									alert('تم رفع الملف بنجاح!');
+								} catch (error) {
+									console.error('Upload failed:', error);
+									alert('حدث خطأ أثناء رفع الملف. حاول مرة أخرى.');
+								}
+							} else {
+								if (!allowedTypes.includes(file.type)) {
+									alert('الملف الذي تم تحديده ليس ملف صوتي صالح.');
+								} else if (file.size > 4 * 1024 * 1024) {
+									alert('الملف يتجاوز الحجم المسموح به (4 ميجا).');
+								}
+							}
+						});
+					};
+
+					const submitButton = document.getElementById('submitExam');
+					submitButton.addEventListener('click', async () => {
+						const form = document.getElementById('examForm');
+						const formData = new FormData(form);
+
+						// Transform FormData into a structured JSON object
+						const payload = {};
+
+						// Update question text using CKEditor
+						Object.keys(editors).forEach(editorId => {
+							const editorContent = editors[editorId].getData();
+							const textarea = document.querySelector(`#${editorId}`);
+							if (textarea) formData.set(textarea?.name, editorContent);
+
+						});
+
+						// Add audio files to FormData
+						Object.keys(audioFiles).forEach(key => {
+							formData.set(key, audioFiles[key]);
+						});
+
+						// Add file uploads to FormData
+						Object.keys(fileUploads).forEach(key => {
+							formData.set(key, fileUploads[key]);
+						});
+
+						// Convert FormData to JSON
+						for (let [key, value] of formData.entries()) {
+							if (key.startsWith('questions')) {
+								const keys = key.split(/\[|\]/).filter(k => k);
+								const sectionId = keys[1];
+								const questionIndex = parseInt(keys[2], 10);
+								const field = keys[3];
+
+								if (!payload.questions) payload.questions = {};
+								if (!payload.questions[sectionId]) payload.questions[sectionId] = [];
+								if (!payload.questions[sectionId][questionIndex - 1]) payload.questions[sectionId][questionIndex - 1] = {};
+
+								if (field === 'choices') {
+									if (!Array.isArray(payload.questions[sectionId][questionIndex - 1][field])) {
+										payload.questions[sectionId][questionIndex - 1][field] = [];
+									}
+									payload.questions[sectionId][questionIndex - 1][field].push(value);
+								} else {
+									payload.questions[sectionId][questionIndex - 1][field] = value;
+								}
+							} else {
+								payload[key] = value;
+							}
+						}
+
+						try {
+
+							if (payload && payload.questions && Object.keys(payload.questions).length) {
+								Object.keys(payload.questions).forEach(sectionId => {
+									payload.questions[sectionId] = payload.questions[sectionId].filter(question => question !== null);
+								});
+							}
+
+							const response = await fetch(`http://localhost:5000/dashboard/EditTesting/${examData._id}`, {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json',
+								},
+								body: JSON.stringify(payload),
+							});
+
+							if (!response.ok) {
+								const errorData = await response.json();
+
+								if (errorData.errors && errorData.errors.length > 0) {
+									Swal.fire({
+										title: 'خطأ في التحقق',
+										html: errorData.errors.map(err => `<p>${err}</p>`).join(''),
+										icon: 'error',
+										confirmButtonText: 'حسنًا',
+									});
+								} else {
+									Swal.fire({
+										title: 'خطأ غير متوقع',
+										text: 'حدث خطأ غير متوقع. حاول مرة أخرى.',
+										icon: 'error',
+										confirmButtonText: 'حسنًا',
+									});
+								}
+							} else {
+								Swal.fire({
+									title: 'تم الحفظ بنجاح',
+									text: 'تمت العملية بنجاح!',
+									icon: 'success',
+									confirmButtonText: 'حسنًا',
+								}).then(() => window.location.reload());
+
+
+							}
+						} catch (error) {
+							console.error('Network error:', error);
+							Swal.fire({
+								title: 'خطأ في الشبكة',
+								text: 'حدث خطأ أثناء الاتصال بالخادم. تأكد من اتصالك بالشبكة.',
+								icon: 'error',
+								confirmButtonText: 'حسنًا',
+							});
+						}
+					})
+
+
+
+					populateExamInfo();
+					attachEventListeners();
+					attachChoiceEvent()
+				</script>
+
+				<%- include("../include/footer_script") %>
+					<script src="/backEnd/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+					<script src="/backEnd/assets/plugins/datatables/datatables.min.js"></script>
+					<script src="/backEnd/assets/js/script.js"></script>
+
+					</head>
+					</body>

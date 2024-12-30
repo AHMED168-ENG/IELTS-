@@ -18,32 +18,35 @@
   .exams .row a .box:hover {
     box-shadow: 10px 10px 15px rgba(212, 0, 255, 0.2);
   }
+  
 </style>
 <link rel="stylesheet" href="/frontEnd/assets/css/select.css" />
 
-<div class="exams">
+<div class="exams py-5">
   <div class="container">
-    <h1 class="text-center">الاختبارات</h1>
-    <div class="row">
+    <h1 class="text-center mb-4">Tests</h1>
+    <div class="row gy-4">
       <% allTesting.forEach((element , i) => { %>
-      <a href="/enterExam/<%= element.id %>" class="col-md-6 mx-auto">
-        <div class="box">
-          <h2 style="text-align: right; margin-bottom: 30px">
-            الاختبار رقم
-            <span style="color: #888; font-size: 25px"
-              >( <%= element.numberOfTest %> )</span
-            >
-            <br />
-            <span style="margin-top: 10px; display: block">
-              <%= element.TestingDisability.name %></span
-            >
-          </h2>
-        </div>
-      </a>
+      <div class="col-md-6 col-lg-4">
+        <a href="/enterExam/<%= element.id %>" class="exam-card d-block  text-decoration-none shadow-sm">
+          <div class="box rounded p-4 text-center bg-light">
+            <h2 class="text-primary mb-3" style="text-transform: capitalize;">
+              <%= element.name %>
+            </h2>
+            <p class="text-muted mb-2">
+              <strong>code:</strong> <%= element.code %>
+            </p>
+            <p class="text-secondary">
+              <strong>type:</strong> <%= element.type %>
+            </p>
+          </div>
+        </a>
+      </div>
       <% }) %>
     </div>
   </div>
 </div>
+
 
 <%- include("../include/footer.ejs") %> <%-
 include("../include/footerScript.ejs") %>

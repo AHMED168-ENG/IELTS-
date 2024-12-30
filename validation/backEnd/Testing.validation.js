@@ -9,6 +9,13 @@ const questionSchema = Joi.object({
             'string.empty': '"Question Text" cannot be empty.',
             'any.required': '"Question Text" is required.'
         }),
+    degree: Joi.number()
+        .required()
+        .label('degree')
+        .messages({
+            'number.base': '"degree" must be a valid number .',
+            'any.required': '"degree" is required.'
+        }),
     type: Joi.string()
         .valid('multipleChoice', 'trueFalse', 'fillInTheBlank', 'file', 'audio')
         .required()
@@ -81,8 +88,6 @@ const questionSchema = Joi.object({
     })
 });
 
-
-
 // Schema for sections containing questions
 const sectionSchema = Joi.object({
     sectionId: Joi.string().required().messages({
@@ -103,6 +108,15 @@ const examSchema = Joi.object({
             'string.empty': '"Exam Name" cannot be empty.',
             'any.required': '"Exam Name" is required.'
         }),
+    shuffle: Joi.boolean()
+        .required()
+        .label('Shuffle')
+        .messages({
+            'boolean.base': '"Shuffle" must be a valid boolean (true or false).',
+            'any.required': '"Shuffle" is required.'
+        }),
+
+
     examType: Joi.string()
         .valid('academic', 'general training')
         .required()

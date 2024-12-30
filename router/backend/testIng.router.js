@@ -18,20 +18,33 @@ const validateRequest = require("../../middel_ware/backEnd/validateRequest");
 const router = require("express").Router();
 
 router.get("/AllTesting", isAuthonticate, AllTestingController);
+
 router.get("/addTesting", isAuthonticate, addTestingController);
+
 router.post(
     "/addTesting",
     isAuthonticate,
     validateRequest(examSchema),
     addTestingControllerPost
 );
-router.get("/EditTesting/:id", isAuthonticate, EditTestingController);
+
+router.get(
+    "/EditTesting/:id", 
+    isAuthonticate, 
+    EditTestingController
+);
+
 router.post(
     "/EditTesting/:id",
     isAuthonticate,
+    validateRequest(examSchema),
     EditTestingControllerPost
 );
-router.post("/activeTesting/:id", isAuthonticate, activeTesting);
+router.post(
+    "/activeTesting/:id", 
+    isAuthonticate, 
+    activeTesting
+);
 router.delete("/deleteTesting/:id", isAuthonticate, deleteTesting);
 
 const storage = multer.diskStorage({

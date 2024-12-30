@@ -4,6 +4,11 @@ const Schema = mongoose.Schema;
 const examSchema = new Schema({
   name: { type: String, required: true },
   type: { type: String, enum: ['academic', 'general training'], required: true },
+  shuffle: {
+      type: Boolean,
+      required: true,
+      default : true
+  },
   code: { type: Number , required : true },
   active: { type: Boolean , required : true , default : true },
   createdAt: { type: Date, default: Date.now },

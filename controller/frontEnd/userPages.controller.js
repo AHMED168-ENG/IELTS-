@@ -10,7 +10,7 @@ const DisabilityModel = require("../../models/disability");
 const TrainingModel = require("../../models/training");
 const BookModel = require("../../models/books");
 const GuideLinesModel = require("../../models/guidelines");
-const TestingModel = require("../../models/guidelines");
+const Testing = require("../../models/testing");
 const ContactUsModel = require("../../models/guidelines");
 
 const paginate = require("express-paginate");
@@ -299,23 +299,8 @@ const showTraining = async (req, res, nest) => {
 
 const allTesting = async (req, res, nest) => {
     try {
-        const allTestResult = await UsersResultModel.find({
-            userId: req.cookies.User.id,
-            success: true,
-          }).select("test"); // تحديد الحقل الذي نريد استرجاعه (test)
-          
-        var resultArr = [];
-        allTestResult.forEach((ele) => {
-            resultArr.push(ele.test);
-        });
-        const allTesting = await TestingModel.find({
-            id: { $nin: resultArr }, // يعادل Op.notIn في MongoDB
-            disability: { $in: req.cookies.User.Disability }, // يعادل Op.in في MongoDB
-          })
-            .populate("TestingDisability", "name") // تضمين بيانات "TestingDisability" مع حقل "name"
-            .sort({ disability: 1, numberOfTest: 1 }); // ترتيب حسب "disability" و "numberOfTest"
-
-
+        const allTesting = await Testing.find()
+        console.log(allTesting)
         res.render("frontEnd/userPage/allTesting", {
             title: "show Training",
             URL: req.url,
@@ -357,7 +342,7 @@ const enterExam = async (req, res, next) => {
       }
   
       // البحث عن بيانات الامتحان باستخدام Mongoose
-      var myExam = await TestingModel.findOne({
+      var myExam = await Testing.findOne({
         _id: req.params.id,
       })
         .populate("TestingDisability", "name"); // تضمين بيانات الـ Disability

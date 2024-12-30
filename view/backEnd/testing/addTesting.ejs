@@ -58,6 +58,23 @@
 		.nav-link {
 			text-transform: capitalize;
 		}
+
+		.choice-number {
+			padding: 7px;
+			background-color: #666;
+			color: white;
+			margin-left: 10px;
+		}
+
+		.remove-choice-btn {
+			margin: 0 !important;
+			margin-right: 10px !important;
+			height: 100%;
+		}
+
+		.add-choice-btn {
+			width: 100%;
+		}
 	</style>
 	<%- include("../include/aside") %>
 		<%- include("../include/navePare") %>
@@ -102,35 +119,46 @@
 											<!-- Exam Info Tab -->
 											<div id="exam-info-tab" class="tab-pane active">
 												<div class="card mt-3">
-													<div class="card-body">
-														<h4 class="card-title">معلومات أساسية</h4>
-														<div class="row form-row">
-															<div class="col-md-12">
-																<div class="form-group">
-																	<label>اسم الامتحان <span
-																			class="text-danger">*</span></label>
-																	<input type="text" name="examName" id="examName"
-																		class="form-control" required>
-																	<div class="error-message text-danger"></div>
+													<div class="card mt-3">
+														<div class="card-body">
+															<h4 class="card-title">معلومات أساسية</h4>
+															<div class="row form-row">
+																<div class="col-md-12">
+																	<div class="form-group">
+																		<label>اسم الامتحان <span class="text-danger">*</span></label>
+																		<input type="text" name="examName" id="examName" class="form-control" required>
+																		<div class="error-message text-danger"></div>
+																	</div>
 																</div>
-															</div>
-
-															<div class="col-md-12">
-																<div class="form-group">
-																	<label>نوع الامتحان <span
-																			class="text-danger">*</span></label>
-																	<select class="form-control" name="examType"
-																		id="examType" required>
-																		<option value="academic">Academic</option>
-																		<option value="general training">General
-																			Training</option>
-																	</select>
-																	<div class="error-message text-danger"></div>
+													
+																<div class="col-md-12">
+																	<div class="form-group">
+																		<label>نوع الامتحان <span class="text-danger">*</span></label>
+																		<select class="form-control" name="examType" id="examType" required>
+																			<option value="academic">Academic</option>
+																			<option value="general training">General Training</option>
+																		</select>
+																		<div class="error-message text-danger"></div>
+																	</div>
+																</div>
+													
+																<!-- Toggle Shuffle Button -->
+																<div class="col-md-12">
+																	<div class="form-group">
+																		<label>ترتيب عشوائي</label>
+																		<div>
+																			<button type="button" id="shuffleToggle" class="btn btn-primary">
+																				<span id="shuffleLabel">تفعيل</span>
+																			</button>
+																			<input type="hidden" name="shuffle" id="shuffleInput" value="true">
+																		</div>
+																	</div>
 																</div>
 															</div>
 														</div>
 													</div>
 												</div>
+												
 											</div>
 											<!-- /Exam Info Tab -->
 
@@ -159,6 +187,25 @@
 				</div>
 				<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 				<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+				<script>
+					document.addEventListener("DOMContentLoaded", () => {
+						const shuffleToggle = document.getElementById("shuffleToggle");
+						const shuffleLabel = document.getElementById("shuffleLabel");
+						const shuffleInput = document.getElementById("shuffleInput");
+				
+						// Initial state
+						let isShuffleEnabled = true;
+				
+						shuffleToggle.addEventListener("click", () => {
+							isShuffleEnabled = !isShuffleEnabled;
+							shuffleInput.value = isShuffleEnabled ? "true" : "false";
+							shuffleLabel.textContent = isShuffleEnabled ? "معطل" : "مفعل";
+							shuffleToggle.classList.toggle("btn-primary", isShuffleEnabled);
+							shuffleToggle.classList.toggle("btn-danger", !isShuffleEnabled);
+						});
+					});
+				</script>
+
 				<script>
 
 					const sections = JSON.parse('<%- JSON.stringify(sections) %>');
@@ -230,6 +277,10 @@
 										<label>نص السؤال <span class="text-danger">*</span></label>
 										<textarea name="questions[${sectionId}][${questionIndex}][questionText]" id="question-editor-${sectionId}-${questionIndex}" class="form-control question-text"></textarea>
 									</div>
+									<div class="form-group ">
+										<label>درجه السؤال <span class="text-danger">*</span></label>
+										<input name="questions[${sectionId}][${questionIndex}][degree]" type="number" class="form-control question-degree"></input>
+									</div>
 									<div class="form-group">
 										<label>نوع السؤال <span class="text-danger">*</span></label>
 										<select name="questions[${sectionId}][${questionIndex}][type]" class="form-control question-type" data-section-id="${sectionId}" data-index="${questionIndex}">
@@ -275,21 +326,28 @@
 
 								if (type === 'multipleChoice') {
 									additionalFields.innerHTML = `
-										<div class="form-group">
-											<label>الخيارات <span class="text-danger">*</span></label>
-											<div id="choices-container-${sectionId}-${index}">
-												<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control mb-2" placeholder="الخيار الأول" required>
-												<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control mb-2" placeholder="الخيار الثاني" required>
+											<div class="form-group">
+												<label>الخيارات <span class="text-danger">*</span></label>
+												<div id="choices-container-${sectionId}-${index}">
+													<div class="choice-wrapper d-flex align-items-center mb-2">
+														<span class="choice-number mr-2">1.</span>
+														<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" placeholder="الخيار الأول" required>
+													</div>
+													<div class="choice-wrapper d-flex align-items-center mb-2">
+														<span class="choice-number mr-2">2.</span>
+														<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" placeholder="الخيار الثاني" required>
+													</div>
+												</div>
+												<button type="button" class="btn btn-success btn-sm add-choice-btn" data-section-id="${sectionId}" data-index="${index}">إضافة خيار</button>
 											</div>
-											<button type="button" class="btn btn-success btn-sm add-choice-btn" data-section-id="${sectionId}" data-index="${index}">إضافة خيار</button>
-										</div>
-										<div class="form-group">
-											<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
-											<input type="text" name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required>
-										</div>
-									`;
+											<div class="form-group">
+												<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
+												<select name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required></select>
+											</div>
+										`;
 									attachChoiceEvent(sectionId, index);
-								} else if (type === 'trueFalse') {
+								}
+								else if (type === 'trueFalse') {
 									additionalFields.innerHTML = `
 										<div class="form-group">
 											<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
@@ -332,13 +390,58 @@
 					};
 
 					const attachChoiceEvent = (sectionId, index) => {
-						document.querySelector(`.add-choice-btn[data-section-id="${sectionId}"][data-index="${index}"]`).addEventListener('click', () => {
+						const addChoiceBtn = document.querySelector(`.add-choice-btn[data-section-id="${sectionId}"][data-index="${index}"]`);
+						const correctAnswerSelect = document.querySelector(`select[name="questions[${sectionId}][${index}][correctAnswer]"]`);
+
+						const updateCorrectAnswerOptions = () => {
 							const choicesContainer = document.getElementById(`choices-container-${sectionId}-${index}`);
-							const choiceInput = `
-								<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control mb-2" placeholder="خيار إضافي" required>
-							`;
-							choicesContainer.insertAdjacentHTML('beforeend', choiceInput);
+							const choices = choicesContainer.querySelectorAll('input[type="text"]');
+							correctAnswerSelect.innerHTML = ''; // Clear old options
+
+							choices.forEach((choice, i) => {
+								const option = document.createElement('option');
+								option.value = choice.value;
+								option.textContent = `${i + 1}. ${choice.value}`;
+								correctAnswerSelect.appendChild(option);
+							});
+						};
+
+						addChoiceBtn.addEventListener('click', () => {
+							const choicesContainer = document.getElementById(`choices-container-${sectionId}-${index}`);
+							const choiceTemplate = `
+						<div class="choice-wrapper d-flex align-items-center mb-2">
+							<span class="choice-number mr-2">${choicesContainer.children.length + 1}.</span>
+							<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" placeholder="خيار إضافي" required>
+							<button type="button" class="btn btn-danger btn-sm ml-2 remove-choice-btn">X</button>
+						</div>
+					`;
+							choicesContainer.insertAdjacentHTML('beforeend', choiceTemplate);
+							updateCorrectAnswerOptions();
 						});
+
+						const choicesContainer = document.getElementById(`choices-container-${sectionId}-${index}`);
+						choicesContainer.addEventListener('input', (e) => {
+							if (e.target.tagName === 'INPUT') {
+								updateCorrectAnswerOptions();
+							}
+						});
+
+						choicesContainer.addEventListener('click', (e) => {
+							if (e.target.classList.contains('remove-choice-btn')) {
+								const choiceWrapper = e.target.closest('.choice-wrapper');
+								choiceWrapper.remove();
+
+								// Update choice numbers
+								const allChoices = choicesContainer.querySelectorAll('.choice-wrapper');
+								allChoices.forEach((choice, i) => {
+									choice.querySelector('.choice-number').textContent = `${i + 1}.`;
+								});
+
+								updateCorrectAnswerOptions();
+							}
+						});
+
+						updateCorrectAnswerOptions();
 					};
 
 					const attachAudioListeners = (sectionId, index) => {
@@ -399,7 +502,7 @@
 								mediaRecorder.stop();
 								isRecording = false;
 							}
-						});
+						})
 					};
 
 					const attachFileListeners = (sectionId, index) => {
@@ -441,7 +544,6 @@
 						});
 					};
 
-
 					const submitButton = document.getElementById('submitExam');
 					submitButton.addEventListener('click', async () => {
 						const form = document.getElementById('examForm');
@@ -454,8 +556,8 @@
 						Object.keys(editors).forEach(editorId => {
 							const editorContent = editors[editorId].getData();
 							const textarea = document.querySelector(`#${editorId}`);
-							if(textarea) formData.set(textarea?.name, editorContent);
-							
+							if (textarea) formData.set(textarea?.name, editorContent);
+
 						});
 
 						// Add audio files to FormData
@@ -493,14 +595,14 @@
 							}
 						}
 
-						try { 
-			
+						try {
+
 							if (payload && payload.questions && Object.keys(payload.questions).length) {
 								Object.keys(payload.questions).forEach(sectionId => {
 									payload.questions[sectionId] = payload.questions[sectionId].filter(question => question !== null);
 								});
 							}
-							
+
 							const response = await fetch('http://localhost:5000/dashboard/addTesting', {
 								method: 'POST',
 								headers: {
@@ -535,7 +637,7 @@
 									confirmButtonText: 'حسنًا',
 								}).then(() => window.location.reload());
 
-								
+
 							}
 						} catch (error) {
 							console.error('Network error:', error);
@@ -547,6 +649,7 @@
 							});
 						}
 					})
+
 
 					attachEventListeners();
 				</script>
