@@ -10,7 +10,6 @@ const {
     uploade_img_multi_fild,
 } = require("../../Helper/helper");
 const GuideLinesModel = require("../../models/guidelines");
-const DisabilityModel = require("../../models/disability");
 
 const AllGideController = async (req, res, next) => {
     try {
@@ -35,14 +34,12 @@ const AllGideController = async (req, res, next) => {
 
 const addGideController = async (req, res, next) => {
     try {
-        const disability = await DisabilityModel.find({ active: true });
         res.render("backEnd/guideLines/addGide", {
             title: "add guide",
             URL: req.url,
             notification: req.flash("notification")[0],
             validationError: req.flash("validationError")[0],
             admin: req.cookies.Admin,
-            disability,
         });
     } catch (error) {
         tryError(res, error);
@@ -51,14 +48,12 @@ const addGideController = async (req, res, next) => {
 const EditGideController = async (req, res, next) => {
     try {
         const gide = await GuideLinesModel.findById(req.params.id);
-        const disability = await DisabilityModel.find({ active: true });
         res.render("backEnd/guideLines/editGide", {
             title: "update guide",
             URL: req.url,
             notification: req.flash("notification")[0],
             validationError: req.flash("validationError")[0],
             admin: req.cookies.Admin,
-            disability,
             gide,
         });
     } catch (error) {

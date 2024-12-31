@@ -60,10 +60,10 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col-sm-7 col-auto">
-                                <h3 class="page-title">الارشادات </h3>
+                                <h3 class="page-title">Sections </h3>
                                 <ul class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html">لوحه التحكم</a></li>
-                                    <li class="breadcrumb-item active">اضافه ارشاد </li>
+                                    <li class="breadcrumb-item"><a href="index.html">Control Panel</a></li>
+                                    <li class="breadcrumb-item active">Add Section </li>
                                 </ul>
                             </div>
                         </div>
@@ -76,14 +76,12 @@
 								<!-- Basic Information -->
 								<div class="card">
 									<div class="card-body">
-										<h4 class="card-title">معلومات بسيطه</h4>
+										<h4 class="card-title">Simple Information</h4>
 										<div class="row form-row">
 											<div class="col-md-12">
 												<div class="form-group">
 													<div class="change-avatar">
-														
-		
-														</div>
+													</div>
 													</div>
 												</div>
 											</div>
@@ -132,7 +130,7 @@
 
 											<div class="col-md-12">
 												<div class="form-group">
-													<label>الوقت بالدقائق <span class="text-danger">*</span></label>
+													<label>Time in minutes <span class="text-danger">*</span></label>
 													<input name="duration" type="number" class="form-control" value="<%= section.duration %>" />
 													<% if (validationError && validationError.duration) { %>
 														<span class="text-danger"><%= validationError.duration[0].msg %></span>

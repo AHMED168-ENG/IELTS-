@@ -6,11 +6,12 @@ const {
     removeImg,
 } = require("../../Helper/helper");
 const UsersResultModel = require("../../models/usersresult");
-const DisabilityModel = require("../../models/disability");
+const UserJoinExam = require("../../models/userJoinExam");
 const TrainingModel = require("../../models/training");
 const BookModel = require("../../models/books");
 const GuideLinesModel = require("../../models/guidelines");
 const Testing = require("../../models/testing");
+const Section = require("../../models/sections");
 const ContactUsModel = require("../../models/guidelines");
 
 const paginate = require("express-paginate");
@@ -18,6 +19,7 @@ const { validationResult } = require("express-validator");
 
 const bcrypt = require("bcrypt");
 const { sendEmail } = require("../../emails/sendEmails");
+const { default: mongoose } = require("mongoose");
 const homePage = async (req, res, next) => {
     try {
         res.render("frontEnd/userPage/homePage", {
@@ -37,7 +39,7 @@ const userProfile = async (req, res, next) => {
             userId: req.cookies.User.id,
             success: true,
           });
-          const userDisability = await DisabilityModel.find({
+          const userDisability = await UserJoinExam.find({
             _id: { $in: req.cookies.User.Disability },
           });
         res.render("frontEnd/userPage/userProfile", {
@@ -300,7 +302,6 @@ const showTraining = async (req, res, nest) => {
 const allTesting = async (req, res, nest) => {
     try {
         const allTesting = await Testing.find()
-        console.log(allTesting)
         res.render("frontEnd/userPage/allTesting", {
             title: "show Training",
             URL: req.url,
@@ -316,49 +317,92 @@ const allTesting = async (req, res, nest) => {
 
 const enterExam = async (req, res, next) => {
     try {
-      // البحث عن نتيجة المستخدم للامتحان باستخدام Mongoose
-      var TestResult = await UsersResultModel.findOne({
-        userId: req.cookies.User.id,
-        test: req.params.id,
-      }).select("test success");
-  
-      var message = "";
-  
-      if (TestResult && TestResult.success === null) {
-        message = "لقد قمت بدخول هذا الامتحان انتظر النتيجه ....";
-      } else if (TestResult && TestResult.success) {
-        message = "لقد دخلت هذا الامتحان واجتزته بالفعل انتظر الاختبارات الاخري";
-      } else if (TestResult && !TestResult.success) {
-        // تحديث حالة النجاح إلى null
-        await UsersResultModel.updateOne(
-          { userId: req.cookies.User.id, test: req.params.id },
-          { success: null }
-        );
-      }
-  
-      if (message) {
-        returnWithMessage(req, res, "/allTesting", message, "success");
-        return;
-      }
-  
-      // البحث عن بيانات الامتحان باستخدام Mongoose
-      var myExam = await Testing.findOne({
-        _id: req.params.id,
-      })
-        .populate("TestingDisability", "name"); // تضمين بيانات الـ Disability
-  
-      res.render("frontEnd/userPage/enterExam", {
-        title: "show Training",
-        URL: req.url,
-        notification: req.flash("notification")[0],
-        validationError: req.flash("validationError")[0],
-        user: req.cookies.User,
-        myExam,
-      });
+        const userId = req.cookies.User.id;
+        const examId = req.params.id;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Check if the user has entered this exam today
+        const existingEntry = await UserJoinExam.findOne({
+            user: userId,
+            exam: examId,
+            createdAt: {
+                $gte: today, 
+            },
+        });
+
+        // if (existingEntry) {
+        //     returnWithMessage(
+        //         req,
+        //         res,
+        //         "/allTesting",
+        //         "لقد قمت بدخول هذا الامتحان اليوم. الرجاء المحاولة غداً.",
+        //         "danger"
+        //     );
+        //     return;
+        // }
+
+        // If the user has not entered today, allow them to proceed
+
+        // Save the user's entry to the Disability table
+        await UserJoinExam.create({
+            user: userId,
+            exam: examId,
+        });
+
+        // Fetch sections and exam details
+        const sections = await Section.find();
+        const examData = await Testing.aggregate([
+            {
+                $match: {
+                    _id: new mongoose.Types.ObjectId(examId),
+                },
+            },
+            {
+                $lookup: {
+                    from: "questions",
+                    localField: "_id",
+                    foreignField: "exam",
+                    as: "questions",
+                    pipeline: [
+                        {
+                            $sort: {
+                                order: 1,
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    type: 1,
+                    shuffle: 1,
+                    active: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    questions: 1,
+                },
+            },
+        ]);
+        console.log(examData)
+        res.render("frontEnd/userPage/enterExam", {
+            title: "Show Training",
+            URL: req.url,
+            notification: req.flash("notification")[0],
+            validationError: req.flash("validationError")[0],
+            user: req.cookies.User,
+            sections,
+            examData: examData[0], 
+        });
     } catch (error) {
-      tryError(res, error);
+        tryError(res, error);
     }
-  };
+};
+
+module.exports = enterExam;
+
   
 const sendResult = async (req, res, nest) => {
     try {
@@ -452,7 +496,7 @@ const contactUsPost = async (req, res, nest) => {
 
 const EditPersonalInformation = async (req, res, nest) => {
     try {
-        var disabilitys = await DisabilityModel.find({
+        var disabilitys = await UserJoinExam.find({
             active: true,
           });
           

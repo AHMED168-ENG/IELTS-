@@ -8,7 +8,6 @@ const {
     Rename_uploade_img_multiFild,
 } = require("../../Helper/helper");
 const TrainingModel = require("../../models/training");
-const DisabilityModel = require("../../models/disability");
 const SectionsModel = require("../../models/sections");
 
 
@@ -38,7 +37,6 @@ const AllTrainingController = async (req, res, next) => {
 
 const addTrainingController = async (req, res, next) => {
     try {
-        const disability = await DisabilityModel.find({ active: true });
         const sections = await SectionsModel.find();
 
         res.render("backEnd/training/addTraining", {
@@ -47,7 +45,6 @@ const addTrainingController = async (req, res, next) => {
             notification: req.flash("notification")[0],
             validationError: req.flash("validationError")[0],
             admin: req.cookies.Admin,
-            disability,
             sections,
         });
     } catch (error) {

@@ -90,10 +90,10 @@
 							<div class="page-header">
 								<div class="row">
 									<div class="col-sm-7 col-auto">
-										<h3 class="page-title">الاختبارات</h3>
+										<h3 class="page-title">Exams</h3>
 										<ul class="breadcrumb">
-											<li class="breadcrumb-item"><a href="index.html">لوحة التحكم</a></li>
-											<li class="breadcrumb-item active">إضافة اختبار</li>
+											<li class="breadcrumb-item"><a href="index.html">Control Panel</a></li>
+											<li class="breadcrumb-item active">Add A Test</li>
 										</ul>
 									</div>
 								</div>
@@ -108,10 +108,10 @@
 										<ul class="nav nav-tabs">
 											<li class="nav-item">
 												<a class="nav-link active" data-toggle="tab"
-													href="#exam-info-tab">بيانات الامتحان</a>
+													href="#exam-info-tab">Exam Data</a>
 											</li>
 											<li class="nav-item">
-												<a class="nav-link" data-toggle="tab" href="#questions-tab">الأسئلة</a>
+												<a class="nav-link" data-toggle="tab" href="#questions-tab">Questions</a>
 											</li>
 										</ul>
 
@@ -121,11 +121,11 @@
 												<div class="card mt-3">
 													<div class="card mt-3">
 														<div class="card-body">
-															<h4 class="card-title">معلومات أساسية</h4>
+															<h4 class="card-title">Basic Information</h4>
 															<div class="row form-row">
 																<div class="col-md-12">
 																	<div class="form-group">
-																		<label>اسم الامتحان <span
+																		<label>Exam Name<span
 																				class="text-danger">*</span></label>
 																		<input type="text" name="examName" id="examName"
 																			class="form-control" required>
@@ -150,7 +150,7 @@
 																<!-- Toggle Shuffle Button -->
 																<div class="col-md-12">
 																	<div class="form-group">
-																		<label>ترتيب عشوائي</label>
+																		<label>Random Order</label>
 																		<div>
 																			<button type="button" id="shuffleToggle"
 																				class="btn ">
@@ -182,8 +182,8 @@
 										</div>
 
 										<div class="submit-section submit-btn-bottom">
-											<button type="button" id="submitExam" class="btn btn-primary submit-btn">حفظ
-												التغييرات</button>
+											<button type="button" id="submitExam" class="btn btn-primary submit-btn">Save
+												Changes</button>
 										</div>
 									</form>
 								</div>
@@ -206,7 +206,7 @@
 						shuffleToggle.addEventListener("click", () => {
 							isShuffleEnabled = !isShuffleEnabled;
 							shuffleInput.value = isShuffleEnabled ? "true" : "false";
-							shuffleLabel.textContent = !isShuffleEnabled ? "معطل" : "مفعل";
+							shuffleLabel.textContent = !isShuffleEnabled ? "Disabled" : "Activated";
 							shuffleToggle.classList.toggle("btn-primary", isShuffleEnabled);
 							shuffleToggle.classList.toggle("btn-danger", !isShuffleEnabled);
 						});
@@ -246,7 +246,7 @@
 						if (shuffleInput) {
 							isShuffleEnabled = examData.shuffle;
 							shuffleInput.value = isShuffleEnabled ? "true" : "false";
-							shuffleLabel.textContent = !isShuffleEnabled ? "معطل" : "مفعل";
+							shuffleLabel.textContent = !isShuffleEnabled ? "Disabled" : "Activated";
 							shuffleToggle.classList.toggle("btn-primary", isShuffleEnabled);
 							shuffleToggle.classList.toggle("btn-danger", !isShuffleEnabled);
 						}
@@ -264,21 +264,21 @@
 								if (type === 'multipleChoice') {
 									additionalFields.innerHTML = `
 										<div class="form-group">
-											<label>الخيارات <span class="text-danger">*</span></label>
+											<label>Options <span class="text-danger">*</span></label>
 											<div id="choices-container-${sectionId}-${index}">
 												<div class="choice-wrapper d-flex align-items-center mb-2">
 													<span class="choice-number mr-2">1.</span>
-													<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" placeholder="الخيار الأول" required>
+													<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" placeholder="First Option" required>
 												</div>
 												<div class="choice-wrapper d-flex align-items-center mb-2">
 													<span class="choice-number mr-2">2.</span>
-													<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" placeholder="الخيار الثاني" required>
+													<input type="text" name="questions[${sectionId}][${index}][choices][]" class="form-control" placeholder="Second Option" required>
 												</div>
 											</div>
-											<button type="button" class="btn btn-success btn-sm add-choice-btn" data-section-id="${sectionId}" data-index="${index}">إضافة خيار</button>
+											<button type="button" class="btn btn-success btn-sm add-choice-btn" data-section-id="${sectionId}" data-index="${index}">Add Option</button>
 										</div>
 										<div class="form-group">
-											<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
+											<label>Correct Answer <span class="text-danger">*</span></label>
 											<select name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required></select>
 										</div>
 									`;
@@ -286,17 +286,17 @@
 								} else if (type === 'trueFalse') {
 									additionalFields.innerHTML = `
 										<div class="form-group">
-											<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
+											<label>Correct Answer <span class="text-danger">*</span></label>
 											<select name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required>
-												<option value="true">صح</option>
-												<option value="false">خطأ</option>
+												<option value="true">True</option>
+												<option value="false">False</option>
 											</select>
 										</div>
 									`;
 								} else if (type === 'fillInTheBlank') {
 									additionalFields.innerHTML = `
 										<div class="form-group">
-											<label>الإجابة <span class="text-danger">*</span></label>
+											<label>Answer <span class="text-danger">*</span></label>
 											<input type="text" name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required>
 										</div>
 									`;
@@ -304,10 +304,10 @@
 
 									additionalFields.innerHTML = `
 										<div class="form-group">
-											<label>تسجيل صوتي <span class="text-danger">*</span></label>
+											<label>Audio Recording<span class="text-danger">*</span></label>
 											<div class="audio-controls">
 												<button type="button" class="btn btn-primary record-audio-btn" data-section-id="${sectionId}" data-index="${index}"><i class="fa fa-microphone"></i> تسجيل</button>
-												<span class="recording-indicator text-danger d-none">جارٍ التسجيل...</span>
+												<span class="recording-indicator text-danger d-none">Registering...</span>
 												<audio controls class="mt-2 d-none"></audio>
 											</div>
 										</div>
@@ -316,7 +316,7 @@
 								} else if (type === 'file') {
 									additionalFields.innerHTML = `
 										<div class="form-group">
-											<label>رفع ملف <span class="text-danger">*</span></label>
+											<label>Upload File <span class="text-danger">*</span></label>
 											<input type="file" name="questions[${sectionId}][${index}][file]" class="form-control file-upload" data-section-id="${sectionId}" data-index="${index}" required>
 										</div>
 									`;
@@ -396,7 +396,7 @@
 						if (question.type === 'multipleChoice') {
 							additionalFields.innerHTML = `
 								<div class="form-group">
-									<label>الخيارات <span class="text-danger">*</span></label>
+									<label>Options <span class="text-danger">*</span></label>
 									<div id="choices-container-${sectionId}-${index}">
 										${question.choices.map((choice, i) => `
 											<div class="choice-wrapper d-flex align-items-center mb-2">
@@ -405,10 +405,10 @@
 											</div>
 										`).join('')}
 									</div>
-									<button type="button" class="btn btn-success btn-sm add-choice-btn" data-section-id="${sectionId}" data-index="${index}">إضافة خيار</button>
+									<button type="button" class="btn btn-success btn-sm add-choice-btn" data-section-id="${sectionId}" data-index="${index}">Add Option</button>
 								</div>
 								<div class="form-group">
-									<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
+									<label>Correct Answer <span class="text-danger">*</span></label>
 									<select name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required>
 										${question.choices.map(choice => `<option value="${choice}" ${question.correctAnswer === choice ? 'selected' : ''}>${choice}</option>`).join('')}
 									</select>
@@ -417,28 +417,28 @@
 						} else if (question.type === 'trueFalse') {
 							additionalFields.innerHTML = `
 								<div class="form-group">
-									<label>الإجابة الصحيحة <span class="text-danger">*</span></label>
+									<label>Correct Answer <span class="text-danger">*</span></label>
 									<select name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" required>
-										<option value="true" ${question.correctAnswer === 'true' ? 'selected' : ''}>صح</option>
-										<option value="false" ${question.correctAnswer === 'false' ? 'selected' : ''}>خطأ</option>
+										<option value="true" ${question.correctAnswer === 'true' ? 'selected' : ''}>True</option>
+										<option value="false" ${question.correctAnswer === 'false' ? 'selected' : ''}>false</option>
 									</select>
 								</div>
 							`;
 						} else if (question.type === 'fillInTheBlank') {
 							additionalFields.innerHTML = `
 								<div class="form-group">
-									<label>الإجابة <span class="text-danger">*</span></label>
+									<label>Answer <span class="text-danger">*</span></label>
 									<input type="text" name="questions[${sectionId}][${index}][correctAnswer]" class="form-control" value="${question.correctAnswer}" required>
 								</div>
 							`;
 						} else if (question.type === 'audio') {
 							additionalFields.innerHTML = `
 								<div class="form-group">
-									<label>تسجيل صوتي <span class="text-danger">*</span></label>
+									<label>Audio Recording <span class="text-danger">*</span></label>
 									<div class="audio-controls">
 										<audio controls src="http://localhost:5000/backEnd/assets/sound/question/${question.file}"></audio>
 										<input type="hidden" name="questions[${sectionId}][${index}][file]" class="form-control file-upload" value="${question.file}" required>
-										<span class="recording-indicator text-danger d-none">جارٍ التسجيل...</span>
+										<span class="recording-indicator text-danger d-none">Registering...</span>
 									</div>
 									
 								</div>
@@ -446,10 +446,10 @@
 						} else if (question.type === 'file') {
 							additionalFields.innerHTML = `
 								<div class="form-group">
-									<label>رفع ملف <span class="text-danger">*</span></label>
+									<label>Upload File <span class="text-danger">*</span></label>
 									<input type="hidden" name="questions[${sectionId}][${index}][file]" class="form-control file-upload" value="${question.file}" required>
 									<audio controls src="http://localhost:5000/backEnd/assets/sound/question/${question.file}"></audio>
-									<a href="http://localhost:5000/backEnd/assets/sound/question/${question.file}" target="_blank">عرض الملف</a>
+									<a href="http://localhost:5000/backEnd/assets/sound/question/${question.file}" target="_blank">View File</a>
 								</div>
 							`;
 						}
@@ -463,28 +463,28 @@
 						const questionTemplate = `
 							<div class="question-block card mt-3">
 								<div class="card-body">
-									<h5>سؤال ${questionIndex}</h5>
+									<h5>Question ${questionIndex}</h5>
 									<div class="form-group question-text-container">
-										<label>نص السؤال <span class="text-danger">*</span></label>
+										<label>Question text <span class="text-danger">*</span></label>
 										<textarea name="questions[${sectionId}][${questionIndex}][questionText]" id="question-editor-${sectionId}-${questionIndex}" class="form-control question-text">${question ? question.questionText : ''}</textarea>
 									</div>
 									<div class="form-group ">
-										<label>درجه السؤال <span class="text-danger">*</span></label>
+										<label>Question Degree<span class="text-danger">*</span></label>
 										<input min="0" name="questions[${sectionId}][${questionIndex}][degree]" value="${question ? question.degree : ''}" type="number" class="form-control question-degree"></input>
 									</div>
 									<div class="form-group">
-										<label>نوع السؤال <span class="text-danger">*</span></label>
+										<label>Question Type <span class="text-danger">*</span></label>
 										<select name="questions[${sectionId}][${questionIndex}][type]" class="form-control question-type" data-section-id="${sectionId}" data-index="${questionIndex}">
 											<option value=""></option>
-											<option value="multipleChoice" ${question?.type === 'multipleChoice' ? 'selected' : ''}>اختيار من متعدد</option>
-											<option value="trueFalse" ${question?.type === 'trueFalse' ? 'selected' : ''}>صح أو خطأ</option>
-											<option value="fillInTheBlank" ${question?.type === 'fillInTheBlank' ? 'selected' : ''}>املأ الفراغ</option>
-											<option value="audio" ${question?.type === 'audio' ? 'selected' : ''}>صوت</option>
-											<option value="file" ${question?.type === 'file' ? 'selected' : ''}>ملف</option>
+											<option value="multipleChoice" ${question?.type === 'multipleChoice' ? 'selected' : ''}>Multiple Choice</option>
+											<option value="trueFalse" ${question?.type === 'trueFalse' ? 'selected' : ''}>true or false</option>
+											<option value="fillInTheBlank" ${question?.type === 'fillInTheBlank' ? 'selected' : ''}>Fill in the blank </option>
+											<option value="audio" ${question?.type === 'audio' ? 'selected' : ''}>voice </option>
+											<option value="file" ${question?.type === 'file' ? 'selected' : ''}>file </option>
 										</select>
 									</div>
 									<div class="additional-fields" data-section-id="${sectionId}" data-index="${questionIndex}"></div>
-									<button type="button" class="btn btn-danger remove-question-btn">حذف السؤال</button>
+									<button type="button" class="btn btn-danger remove-question-btn">Delete Question</button>
 								</div>
 							</div>
 						`;
@@ -533,7 +533,7 @@
 										<h4 class="card-title">${section.section || 'Unnamed Section'}</h4>
 										<div id="questions-container-${section._id}" class="questions-container"></div>
 										<button type="button" class="btn btn-primary add-question-btn" data-section-id="${section._id}">
-											إضافة سؤال
+											Add A Question
 										</button>
 									</div>
 								</div>`;
@@ -590,19 +590,19 @@
 										const data = await response.json();
 										audioFiles[`questions[${sectionId}][${index}][file]`] = data.fileName;
 										recordingIndicator.classList.add('d-none');
-										recordBtn.innerHTML = '<i class="fa fa-microphone"></i> تسجيل';
+										recordBtn.innerHTML = '<i class="fa fa-microphone"></i> Registration';
 									} catch (error) {
 										console.error('Upload failed:', error);
 									}
 
 									recordingIndicator.classList.add('d-none');
-									recordBtn.innerHTML = '<i class="fa fa-microphone"></i> تسجيل';
+									recordBtn.innerHTML = '<i class="fa fa-microphone"></i> Registration';
 								};
 
 								mediaRecorder.start();
 								isRecording = true;
 								recordingIndicator.classList.remove('d-none');
-								recordBtn.innerHTML = '<i class="fa fa-stop"></i> إيقاف';
+								recordBtn.innerHTML = '<i class="fa fa-stop"></i> Stop';
 							} else {
 								mediaRecorder.stop();
 								isRecording = false;
@@ -633,16 +633,16 @@
 
 									const data = await response.json();
 									fileUploads[`questions[${sectionId}][${index}][file]`] = data.fileName;
-									alert('تم رفع الملف بنجاح!');
+									alert('File uploaded successfully!');
 								} catch (error) {
 									console.error('Upload failed:', error);
-									alert('حدث خطأ أثناء رفع الملف. حاول مرة أخرى.');
+									alert('An error occurred while uploading the file. Try again.');
 								}
 							} else {
 								if (!allowedTypes.includes(file.type)) {
-									alert('الملف الذي تم تحديده ليس ملف صوتي صالح.');
+									alert('The specified file is not a valid audio file.');
 								} else if (file.size > 4 * 1024 * 1024) {
-									alert('الملف يتجاوز الحجم المسموح به (4 ميجا).');
+									alert('The file exceeds the allowed size (4 MB).');
 								}
 							}
 						});
@@ -720,25 +720,25 @@
 
 								if (errorData.errors && errorData.errors.length > 0) {
 									Swal.fire({
-										title: 'خطأ في التحقق',
+										title: 'Verification error',
 										html: errorData.errors.map(err => `<p>${err}</p>`).join(''),
 										icon: 'error',
-										confirmButtonText: 'حسنًا',
+										confirmButtonText: 'Good',
 									});
 								} else {
 									Swal.fire({
-										title: 'خطأ غير متوقع',
-										text: 'حدث خطأ غير متوقع. حاول مرة أخرى.',
+										title: 'unexpected error',
+										text: 'An unexpected error occurred. Try again.',
 										icon: 'error',
-										confirmButtonText: 'حسنًا',
+										confirmButtonText: 'Good',
 									});
 								}
 							} else {
 								Swal.fire({
-									title: 'تم الحفظ بنجاح',
-									text: 'تمت العملية بنجاح!',
+									title: 'Saved successfully',
+									text: 'The operation was successful!',
 									icon: 'success',
-									confirmButtonText: 'حسنًا',
+									confirmButtonText: 'Good',
 								}).then(() => window.location.reload());
 
 
@@ -746,10 +746,10 @@
 						} catch (error) {
 							console.error('Network error:', error);
 							Swal.fire({
-								title: 'خطأ في الشبكة',
-								text: 'حدث خطأ أثناء الاتصال بالخادم. تأكد من اتصالك بالشبكة.',
+								title: 'Network error',
+								text: 'An error occurred while connecting to the server. Please check your network connection.',
 								icon: 'error',
-								confirmButtonText: 'حسنًا',
+								confirmButtonText: 'Good',
 							});
 						}
 					})

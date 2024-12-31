@@ -13,7 +13,6 @@ const { authAdmin } = require("./router/backend/auth.router");
 const { userRoutes } = require("./router/frontEnd/userPagesRoutes");
 const { authUserRoutes } = require("./router/frontEnd/auth/auth");
 const { usersRouter } = require("./router/backend/users_router");
-const { dispabilityRouter } = require("./router/backend/disability.router");
 const { trainingRouter } = require("./router/backend/training.router");
 const { TestingRouter } = require("./router/backend/testIng.router");
 const { messagesRouter } = require("./router/backend/messages.router");
@@ -21,7 +20,6 @@ const { allUserResult } = require("./router/backend/UserResult");
 const { GideRouter } = require("./router/backend/gide");
 const { SectionRouter } = require("./router/backend/section");
 const { soundExamRouter } = require("./router/backend/SoundExam");
-const { Sequelize } = require("sequelize");
 const mongoose = require("mongoose");
 
 mongoose.connect('mongodb://localhost:27017/ieltsExam', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -54,7 +52,6 @@ app.use(paginate.middleware(10, 20));
 app.use("/", dashpordRouter);
 app.use("/dashboard", authAdmin);
 app.use("/dashboard", usersRouter);
-app.use("/dashboard", dispabilityRouter);
 app.use("/dashboard", trainingRouter);
 app.use("/dashboard", TestingRouter);
 app.use("/dashboard", messagesRouter);

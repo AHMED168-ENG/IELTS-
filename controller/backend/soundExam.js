@@ -8,7 +8,6 @@ const {
     Rename_uploade_img_multiFild
 } = require("../../Helper/helper");
 const SoundExamModel = require("../../models/soundexam");
-const DisabilityModel = require("../../models/disability");
 
 const AllSoundController = async (req, res, next) => {
     try {
@@ -33,18 +32,12 @@ const AllSoundController = async (req, res, next) => {
 
 const addSoundController = async (req, res, next) => {
     try {
-        var disability = await DisabilityModel.findAll({
-            where: {
-                active: true,
-            },
-        });
         res.render("backEnd/soundExam/addSound", {
             title: "add SoundExam",
             URL: req.url,
             notification: req.flash("notification")[0],
             validationError: req.flash("validationError")[0],
             admin: req.cookies.Admin,
-            disability,
         });
     } catch (error) {
         tryError(res, error);
@@ -54,18 +47,12 @@ const addSoundController = async (req, res, next) => {
 const EditSoundController = async (req, res, next) => {
     try {
         const sound = await SoundExamModel.findById(req.params.id);
-        var disability = await DisabilityModel.findAll({
-            where: {
-                active: true,
-            },
-        });
         res.render("backEnd/soundExam/EditSound", {
             title: "update sound",
             URL: req.url,
             notification: req.flash("notification")[0],
             validationError: req.flash("validationError")[0],
             admin: req.cookies.Admin,
-            disability,
             sound,
         });
     } catch (error) {

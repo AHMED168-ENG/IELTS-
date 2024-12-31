@@ -1,21 +1,18 @@
 const { tryError } = require("../../Helper/helper");
 const User = require("../../models/users");
-const Disability = require("../../models/disability");
 const Testing = require("../../models/testing");
-const Training = require("../../models/training");
+const Section = require("../../models/sections");
 
-const dashpord_page_controller = async (req, res, next) => {
+const dashboard_page_controller = async (req, res, next) => {
     try {
         var users = await User.find({});
-        var disability = await Disability.find({});
         var testing = await Testing.find({});
-        var training = await Training.find({});
+        var training = await Section.find({});
 
         res.render("backEnd/dashboard", {
             title: "dashboard",
             URL: req.url,
             users,
-            disability,
             Testing :testing,
             training,
             notification: req.flash("notification")[0],
@@ -27,5 +24,5 @@ const dashpord_page_controller = async (req, res, next) => {
 };
 
 module.exports = {
-    dashpord_page_controller,
+    dashboard_page_controller,
 };

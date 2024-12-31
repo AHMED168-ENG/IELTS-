@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// تعريف Schema الخاص بـ users
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -11,15 +10,9 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   gender: {
-    type: Boolean, // true = male, false = female
+    type: Boolean, 
     required: true,
   },
-  Disability: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Disability', // مرجع إلى مجموعة `Disability`
-    },
-  ],
   email: {
     type: String,
     required: true,
@@ -47,12 +40,5 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// تعريف سكوب مخصص (استعلام نشط)
-userSchema.statics.isActive = function () {
-  return this.find({ active: true });
-};
-
-// إنشاء النموذج Model
 const User = mongoose.model('User', userSchema);
-
 module.exports = User;

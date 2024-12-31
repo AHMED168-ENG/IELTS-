@@ -20,10 +20,10 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col-sm-7 col-auto">
-                                <h3 class="page-title">كل الاقسام اعضاء النطق</h3>
+                                <h3 class="page-title">All Sections</h3>
                                 <ul class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html">لوحه التحكم</a></li>
-                                    <li class="breadcrumb-item active">الاقسام اعضاء النطق</li>
+                                    <li class="breadcrumb-item"><a href="index.html">Control Panel</a></li>
+                                    <li class="breadcrumb-item active">Sections</li>
                                 </ul>
                             </div>
                         </div>
@@ -38,11 +38,11 @@
 										<table class="datatable table table-hover table-center mb-0">
 											<thead>
 												<tr>
-													<th> اسم القسم</th>
+													<th>Department Name</th>
 													<!-- <th>بدايه التاريخ</th> -->
-													<th>المده</th>
+													<th>Duration</th>
 													<!-- <th>نهايه التاريخ</th> -->
-													<th>التحكم</th>
+													<th>Control</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -50,7 +50,7 @@
 													<tr>
 														<td>
 															<h2 class="table-avatar">
-																<a style="margin-left:10px" class="avatar avatar-sm mr-2"></a>
+																<!-- <a style="margin-left:10px" class="avatar avatar-sm mr-2"></a> -->
 																<a ><p class="testPar"><%= element.section %></p></a>
 															</h2>
 														</td>
@@ -63,7 +63,7 @@
 														<td>
 															<h2 class="table-avatar">
 																<a style="margin-left:10px" class="avatar avatar-sm mr-2"></a>
-																<a ><p class="testPar"><%= element.duration %>دقيقه</p></a>
+																<a ><p class="testPar"><%= element.duration %> minute</p></a>
 															</h2>
 														</td>
 														<!-- <td>
@@ -76,11 +76,11 @@
 													
 														<td>
 															<!-- <a href="/dashboard/activeBook/<%= element.id %>?isActive=<%= element.active %>" class="btn btn-primary"><%= !element.active ? "غير مفعل" : "مفعل" %></a> -->
-															<a href="/dashboard/EditSection/<%= element.id %>" class="btn btn-success">تعدبل</a>
+															<a href="/dashboard/EditSection/<%= element.id %>" class="btn btn-success">Edit</a>
 															<form class="d-inline" method="post" action="/dashboard/deleteSection/<%= element.id %>">
 																<!-- <input type="hidden" name="oldImage" id="" value="<%= element.image %>"> -->
 																<!-- <input type="hidden" name="oldPdf" id="" value="<%= element.pdf %>"> -->
-																<button class="btn btn-danger">حذف</button>
+																<button class="btn btn-danger">Delete</button>
 															</form>
 
 														</td>

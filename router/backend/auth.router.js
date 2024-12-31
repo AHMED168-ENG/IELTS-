@@ -4,7 +4,7 @@ const {
   signOutAdmin,
 } = require("../../controller/backend/auth/signInUser.controller");
 const {
-  dashpord_page_controller,
+  dashboard_page_controller,
 } = require("../../controller/backend/dashpored");
 
 const {

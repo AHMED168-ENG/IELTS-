@@ -25,11 +25,7 @@ const AllUsersController = async (req, res, next) => {
 
 const EditUsersController = async (req, res, next) => {
   try {
-    const user = await User.findOne({
-      where: {
-        id: req.params.id,
-      },
-    });
+    const user = await User.findOne({_id: req.params.id,});
     res.render("backEnd/users/editUser", {
       title: "edit User",
       URL: req.url,

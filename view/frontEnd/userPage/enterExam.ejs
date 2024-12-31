@@ -1,220 +1,201 @@
-<%- include("../include/head.ejs") %> <%- include("../include/navebar.ejs") %>
+<%- include("../include/head.ejs") %>
+<%- include("../include/navebar.ejs") %>
 <%- include("../include/notification.ejs") %>
 
 <style>
-  .box .row > div {
-    margin-bottom:20px
+  .section-container {
+    display: none;
   }
-  .box .row > div > div {
-    background-color: #eee;
-    border-radius: 15px;
-    border: 1px solid #ddd;
-    margin-left: 10px;
-    position: relative;
-    overflow: hidden;
-    padding: 20px 10px 10px;
-    height:100%
+  .section-container.active {
+    display: block;
   }
-
-  .box .row > div .left .notification {
-    position:absolute;
-    left:0;
-    top:0;
-    z-index: 50;
-    width:100%;
-    padding:10px;
-    color:white;
-    background:rgb(234, 77, 77);
+  .timer {
+    font-size: 1.5rem;
+    font-weight: bold;
     text-align: center;
-    align-items: center;
-    justify-content: center;
-    transform: translateY(-100%);
+    margin-bottom: 20px;
   }
-    .box .row > div .left .notification.active {
-    transform: translateY(10px);
-    }
-  .box .row > div .left span {
-    position:relative;
-  }
-  .box .row > div .left button {
-    position: absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    border:0;
-    background:white;
-    z-index: 3;
-    border-radius: 50%;
-  }
-
-  .box .row > div .left span::after , .box .row > div .left span::before {
-    content:"";
-    position: absolute;
-    width:100%;
-    height:100%;
-    border-radius: 50%;
-    background:#ccc;
-    top:0;
-    left:0;
-  }
-  .box .row > div .left span.active::before {
-    background:#ddd;
-        z-index: 1;
-    animation: anim 1.5s ease-in-out 1s infinite ;
-  }
-  
-  .box .row > div .left span.active::after {
-        z-index: 2;
-    animation: anim 1.5s ease-in-out 0s infinite ;
-  }
- 
-  @keyframes anim {
-      0% {
-        width:100%;
-        height:100%;
-        left:0%;
-        top:0%
-      }
-      100% {
-        width:140%;
-        height:140%;
-        left:-20%;
-        top:-20%      
-      }
+  .audio-control {
+    margin-bottom: 10px;
   }
 </style>
-<link rel="stylesheet" href="/frontEnd/assets/css/select.css" />
 
-<div class="exams">
-  <div class="text-center alert alert-danger">اذا قمت بتسجيل الاجابه واردت اعاده التسجيل قم بالضغط علي ايكونت الميكروفون وبالتالي سيتم اعاده التسجيل</div>
+<div class="exam">
   <div class="container">
-    <h1 class="text-center">الاختبارات</h1>
-    <div class="row">
-      <div class="col-md-12 mx-auto">
-        <div class="box">
-          <h2 style="text-align: center; margin-bottom: 70px">
-            الاختبار رقم ( <%= myExam.numberOfTest %> )
-          </h2>
-          <% myExam.exam.forEach((element , i) => { %>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="right">
-                <h3>
-                  المطلوب:<span class="s-1"></span>
-                    نطق كلمة <span class="s-2"><%= element %></span></span
-                  >
-                </h3>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="left">
-                <div class="notification "></div>
-                <span class="d-inline-flex icon align-items-center justify-content-center">
-                  <button name="record" data_atrr = "<%= i %>">
-                    <i class="fas fa-microphone"></i>
-                  </button>
-                  <button class="d-none" name="stop">
-                    <i class="fas fa-microphone-slash"></i>
-                  </button>
-                </span>
-                <h3>اضغط لبدا التسجيل</h3>
-                <audio src="" controls class="d-none"></audio>
-              </div>
-            </div>
-          </div>
-          <% }) %>
-        </div>
-      </div>
-    </div>
-    <button style="margin:auto"  class="btn btn-success result d-block">ارسال الاجابه</button>
+    <h1 class="text-center">الاختبار</h1>
+    <div id="timer" class="timer">00:00</div>
 
+    <% if (examData.questions && examData.questions.length > 0) { %>
+      <% const sections = [...new Set(examData.questions.map(q => q.section))]; %>
+      <% sections.forEach((sectionId, sectionIndex) => { %>
+        <div class="section-container" id="section-<%= sectionIndex %>" data-duration="<%= examData.questions.find(q => q.section === sectionId).duration || 5 %>">
+          <h2 class="text-center">القسم: <%= examData.questions.find(q => q.section === sectionId).sectionName || `قسم ${sectionIndex + 1}` %></h2>
+          <% const sectionQuestions = examData.questions.filter(q => q.section === sectionId); %>
+          <% if (sectionQuestions && sectionQuestions.length > 0) { %>
+            <% sectionQuestions.forEach((question, questionIndex) => { %>
+              <div class="question">
+                <h3><%= question.questionText %></h3>
+                <% if (question.type === 'multipleChoice') { %>
+                  <% question.choices.forEach((choice) => { %>
+                    <div>
+                      <label>
+                        <input type="radio" name="question-<%= sectionIndex %>-<%= questionIndex %>" value="<%= choice %>"> <%= choice %>
+                      </label>
+                    </div>
+                  <% }) %>
+                <% } else if (question.type === 'trueFalse') { %>
+                  <div>
+                    <label><input type="radio" name="question-<%= sectionIndex %>-<%= questionIndex %>" value="true"> صح</label>
+                    <label><input type="radio" name="question-<%= sectionIndex %>-<%= questionIndex %>" value="false"> خطأ</label>
+                  </div>
+                <% } else if (question.type === 'fillInTheBlank') { %>
+                  <input type="text" name="question-<%= sectionIndex %>-<%= questionIndex %>" class="form-control">
+                <% } else if (question.type === 'audio') { %>
+                  <div>
+                    <audio src="/uploads/<%= question.file %>" controls class="audio-control" data-played="false"></audio>
+                    <button class="record-audio" data-question="<%= questionIndex %>">تسجيل صوت</button>
+                  </div>
+                <% } else if (question.type === 'file') { %>
+                  <div>
+                    <a href="/uploads/<%= question.file %>" target="_blank">عرض الملف</a>
+                    <button class="record-audio" data-question="<%= questionIndex %>">تسجيل صوت</button>
+                  </div>
+                <% } %>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <p>لا توجد أسئلة في هذا القسم.</p>
+          <% } %>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>لا توجد أسئلة متاحة.</p>
+    <% } %>
+
+    <button id="submit-section" class="btn btn-primary">الانتقال إلى القسم التالي</button>
   </div>
 </div>
 
-<%- include("../include/footer.ejs") %> <%-
-include("../include/footerScript.ejs") %>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+<%- include("../include/footer.ejs") %>
+<%- include("../include/footerScript.ejs") %>
 
 <script>
-    var btnStart = document.querySelectorAll('button[name="record"]');
-    var sendresult = document.querySelector(".result")
-    var myrecordes = []
-    btnStart.forEach((ele , i) => {
-    ele.addEventListener('click', async () => {
-          ele.parentElement.classList.toggle("active")
-          var btnStop = ele.nextElementSibling;
-          var audio = ele.parentElement.parentElement.lastElementChild;
-          btnStop.classList.toggle("d-none")
-          ele.classList.toggle("d-none")
-          if(!audio.classList.contains("d-none")) {
-            audio.classList.add("d-none")
-            audio.src = ""
-          } 
-          var stream = await navigator.mediaDevices.getUserMedia({audio: true});
-          var mediaRecorder = new MediaRecorder(stream);
-          mediaRecorder.start();
-          var chunks = [];
-          mediaRecorder.ondataavailable = (e)=>{
-                chunks.push(e.data);
-          }
-          //function to catch error
-          mediaRecorder.onerror = (e)=>{
-                alert(e.error);
-          }
-          mediaRecorder.onstop = (e)=>{
-                var blob = new Blob(chunks , {type : 'audio/ogg; codecs=opus'});
-                var url = URL.createObjectURL(blob);
-                //create url for audio
-                var record = new File([blob], "record-name2.ogg", { type: 'audio/ogg; codecs=opus', lastModified: new Date().getTime() });
-                myrecordes[parseInt(ele.getAttribute('data_atrr'))] = record
-                
-                
-                btnStop.classList.toggle("d-none")
-                  ele.classList.toggle("d-none")
-                  ele.parentElement.classList.toggle("active")
-                  audio.classList.remove("d-none")
-                  audio.src = url
-              
-          }
-          btnStop.addEventListener('click',()=>{
-            console.log(chunks)
-            mediaRecorder.stop();
-                
-          })
-      })
-      })
+  const sections = document.querySelectorAll(".section-container");
+  const timerDisplay = document.getElementById("timer");
+  const submitButton = document.getElementById("submit-section");
 
-    sendresult.onclick = function(e) {
-        var allAudios = document.querySelectorAll("audio")
-        var test = false
-        allAudios.forEach(ele => {
-          if(ele.classList.contains("d-none")) {
-            ele.parentElement.firstElementChild.innerHTML = "يجب عليك اجتياذ هذا الامتحان"
-            ele.parentElement.firstElementChild.classList.add("active")
-            setTimeout(() => {
-            ele.parentElement.firstElementChild.innerHTML = ""
-            ele.parentElement.firstElementChild.classList.remove("active")            
-          } , 2000)
-          test = true
-          }
-        })
-        if(test) return
-        var data = new FormData()
-        myrecordes.forEach(ele => {
-          data.append("audio" ,  ele)
-        })
-        axios({
-          url : "/sendResult/<%= myExam.id %>",
-          method : "post",
-          data,
-        }).then(result => {
-          e.target.remove()
-          alert("تم ارسال الاجابات بنجاح انتظر النتيجه في خلال 24 ساعه ")
-          setTimeout(() => {
-            window.location.href = "/allTesting"
-          } ,3000)
-        })   
-    }
+  let currentSectionIndex = 0;
+  let timerInterval;
+
+  const startTimer = (duration, callback) => {
+    let remainingTime = duration * 60;
+
+    const updateTimer = () => {
+      const minutes = Math.floor(remainingTime / 60);
+      const seconds = remainingTime % 60;
+      timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      if (remainingTime <= 0) {
+        clearInterval(timerInterval);
+        callback();
+      } else {
+        remainingTime--;
+      }
+    };
+
+    updateTimer();
+    timerInterval = setInterval(updateTimer, 1000);
+  };
+
+  const showSection = (index) => {
+    sections.forEach((section, idx) => {
+      section.classList.toggle("active", idx === index);
+    });
+
+    const duration = parseInt(sections[index].dataset.duration, 10);
+    startTimer(duration, () => {
+      submitSection();
+    });
+  };
+
+  const submitSection = () => {
+    clearInterval(timerInterval);
+
+    const formData = new FormData();
+    const currentSection = sections[currentSectionIndex];
+
+    const inputs = currentSection.querySelectorAll("input, textarea, audio");
+    inputs.forEach((input) => {
+      if (input.type === "radio" && input.checked) {
+        formData.append(input.name, input.value);
+      } else if (input.type !== "radio" && input.tagName !== "AUDIO") {
+        formData.append(input.name, input.value);
+      } else if (input.tagName === "AUDIO" && input.getAttribute("data-played") === "true") {
+        formData.append(input.name, input.src);
+      }
+    });
+
+    axios.post(`/submitSection/<%= examData._id %>?sectionIndex=${currentSectionIndex}`, formData)
+      .then(() => {
+        if (currentSectionIndex < sections.length - 1) {
+          currentSectionIndex++;
+          showSection(currentSectionIndex);
+        } else {
+          alert("تم الانتهاء من الاختبار");
+          window.location.href = "/allTesting";
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("حدث خطأ أثناء إرسال الإجابات، يرجى المحاولة مرة أخرى.");
+      });
+  };
+
+  document.querySelectorAll(".audio-control").forEach(audio => {
+    audio.addEventListener("play", (event) => {
+      const played = event.target.getAttribute("data-played");
+      if (played === "true") {
+        alert("لا يمكن تشغيل الملف الصوتي مرة أخرى.");
+        event.target.pause();
+      } else {
+        event.target.setAttribute("data-played", "true");
+      }
+    });
+  });
+
+  document.querySelectorAll(".record-audio").forEach(button => {
+    button.addEventListener("click", async (event) => {
+      const questionIndex = event.target.dataset.question;
+      const parent = event.target.closest(".question");
+      const audioElement = parent.querySelector("audio");
+      let mediaRecorder;
+      let chunks = [];
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = (e) => {
+        chunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
+        const url = URL.createObjectURL(blob);
+        audioElement.src = url;
+        audioElement.classList.remove("d-none");
+        chunks = [];
+        formData.append(`audio-${questionIndex}`, blob);
+      };
+
+      mediaRecorder.start();
+
+      setTimeout(() => {
+        mediaRecorder.stop();
+      }, 60000); // توقف التسجيل تلقائيًا بعد 60 ثانية
+    });
+  });
+
+  submitButton.addEventListener("click", submitSection);
+
+  showSection(currentSectionIndex);
 </script>

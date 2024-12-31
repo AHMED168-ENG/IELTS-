@@ -1400,12 +1400,12 @@ button.bg-danger:hover {
 	height: 60px;
 }
 .header .header-left {
-	float: right;
+	float: left;
 	height: 60px;
 	padding: 0 20px;
 	position: relative;
 	text-align: center;
-	width: 240px;
+	width: 180px;
 	z-index: 1;
 	transition: all 0.2s ease-in-out;
 }
@@ -1452,7 +1452,7 @@ button.bg-danger:hover {
 	transform: rotate(-135deg);
 }
 .user-menu {
-    float: left;
+    float: right;
     margin: 0;
     position: relative;
     z-index: 99;
@@ -1618,7 +1618,7 @@ html.menu-opened body {
 /* Search */
 
 .top-nav-search {
-    float: right;
+    float: left;
     margin-left: 15px;
 }
 .top-nav-search form {
@@ -4273,7 +4273,7 @@ table.table-inbox tbody tr.checked {
 		align-items: center;
 		color: #333;
 		display: inline-flex;
-		float: right;
+		float: left;
 		font-size: 30px;
 		height: 60px;
 		justify-content: center;

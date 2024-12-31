@@ -8,7 +8,6 @@ const {
   returnWithMessage,
 } = require("../../../Helper/helper");
 const UserModel = require("../../../models/users");
-const DisabilityModel = require("../../../models/disability");
 
 const { sendEmail } = require("../../../emails/sendEmails");
 const { Op } = require("sequelize");
@@ -80,7 +79,6 @@ const signInUserPost = async (req, res, next) => {
 
 const signUpUser = async (req, res, next) => {
   try {
-    const disabilitys = await DisabilityModel.find({ active: true });
 
     res.render("frontEnd/auth/signUp", {
       title: "signUp User",
@@ -88,7 +86,6 @@ const signUpUser = async (req, res, next) => {
       notification: req.flash("notification")[0],
       validationError: req.flash("validationError")[0],
       user: req.cookies.User,
-      disabilitys,
     });
   } catch (error) {
     tryError(res, error);

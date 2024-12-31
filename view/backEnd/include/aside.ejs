@@ -8,31 +8,31 @@
 								<span>Main</span>
 							</li>
 							<li class="<%= URL == "dashboard" ? "active" : "" %>"> 
-								<a href="dashboard" class="d-flex align-items-center justify-content-between"> <span>لوحه التحكم </span><i class="fe fe-home"></i></a>
+								<a href="dashboard" class="d-flex align-items-center justify-content-between"> <span>Control panel</span><i class="fe fe-home"></i></a>
 							</li>
 							
 							
 							<li class="submenu">
-								<a href="#" class="d-flex align-items-center justify-content-between"> <span> المستخدمين </span> <span class="menu-arrow" style="margin-left:20px"></span> <i class="fe fe-users"></i></a> 
+								<a href="#" class="d-flex align-items-center justify-content-between"> <span> Users </span> <span class="menu-arrow" style="margin-left:20px"></span> <i class="fe fe-users"></i></a> 
 								<ul style="display: none;">
-									<li><a class="<%= URL == "/allUsers" ? "active" : "" %>" href="/dashboard/allUsers"> كل المستخدمين </a></li>
+									<li><a class="<%= URL == "/allUsers" ? "active" : "" %>" href="/dashboard/allUsers"> All Users </a></li>
 									<!-- <li><a class="<%= URL == "/allUsers" ? "active" : "" %>" href="/dashboard/allUsers"> اضافه مستخدم </a></li> -->
 								</ul>
 							</li>
 							<li class="submenu">
-								<a href="#" class="d-flex align-items-center justify-content-between"> <span> الاقسام </span> <span class="menu-arrow"></span><i style="font-size:20px" class="fe fe-bolt"></i></a> 
+								<a href="#" class="d-flex align-items-center justify-content-between"> <span> Sections </span> <span class="menu-arrow"></span><i style="font-size:20px" class="fe fe-bolt"></i></a> 
 								<ul style="display: none;">
-									<li><a class="<%= URL == "/AllSection" ? "active" : "" %>" href="/dashboard/AllSection"> كل الاقسام </a></li>
-									<li><a class="<%= URL == "/addSection" ? "active" : "" %>" href="/dashboard/addSection"> اضافه قسم</a></li>
+									<li><a class="<%= URL == "/AllSection" ? "active" : "" %>" href="/dashboard/AllSection"> All Sections</a></li>
+									<li><a class="<%= URL == "/addSection" ? "active" : "" %>" href="/dashboard/addSection"> Add Section </a></li>
 								</ul>
 							</li>
 							
 							
 							<li class="submenu">
-								<a href="#" class="d-flex align-items-center justify-content-between"> <span> الاختبارات </span> <span class="menu-arrow"></span><i style="font-size:20px" class="fa fa-flask"></i></a> 
+								<a href="#" class="d-flex align-items-center justify-content-between"> <span> Exams </span> <span class="menu-arrow"></span><i style="font-size:20px" class="fa fa-flask"></i></a> 
 								<ul style="display: none;">
-									<li><a class="<%= URL == "/AllTesting" ? "active" : "" %>" href="/dashboard/AllTesting"> كل الاختبارات </a></li>
-									<li><a class="<%= URL == "/addTesting" ? "active" : "" %>" href="/dashboard/addTesting"> اضافه اختبار</a></li>
+									<li><a class="<%= URL == "/AllTesting" ? "active" : "" %>" href="/dashboard/AllTesting"> All Exams</a></li>
+									<li><a class="<%= URL == "/addTesting" ? "active" : "" %>" href="/dashboard/addTesting"> Add Exam </a></li>
 								</ul>
 							</li>
 <!-- 										
@@ -45,9 +45,9 @@
 							</li> -->
 							
 							<li class="submenu">
-								<a href="#" class="d-flex align-items-center justify-content-between"> <span> كل اجبات المستخدمين </span> <span class="menu-arrow"></span><i style="font-size:20px" class="fa fa-text-height"></i></a> 
+								<a href="#" class="d-flex align-items-center justify-content-between"> <span> All User Answers</span> <span class="menu-arrow"></span><i style="font-size:20px" class="fa fa-text-height"></i></a> 
 								<ul style="display: none;">
-									<li><a class="<%= URL == "/showAllUserResult" ? "active" : "" %>" href="/dashboard/showAllUserResult"> كل الاجبات </a></li>
+									<li><a class="<%= URL == "/showAllUserResult" ? "active" : "" %>" href="/dashboard/showAllUserResult"> All Answers</a></li>
 								</ul>
 							</li>
 							
